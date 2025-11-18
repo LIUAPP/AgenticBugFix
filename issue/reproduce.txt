@@ -1,9 +1,0 @@
-Reproducing the bug
-===================
-
-1. Use Python 3.9+ (any recent CPython works). No extra dependencies are required.
-2. From the repository root, run:  python -m app.cli.main --repeat 2
-3. Observe that the first run reports the correct totals (alice=20, bob=10) but the
-   second run already shows doubled values (alice=40, bob=20).
-4. The inflation happens because the aggregator in app/core/processor.py keeps a
-   mutable default dictionary that stores state between calls.
