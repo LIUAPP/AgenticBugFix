@@ -1,0 +1,30 @@
+# docker-compose for standard creating iris container without image built
+# hma, 2023-07-06
+services:
+    iris:
+        build: ./image-iris
+        environment:
+            - TZ=CST-8
+            - NAME=iris
+        container_name: testbed-iris
+        ports:
+            - 1980:1972 
+            - 32773:52773
+        command: 
+            --check-caps false
+            --log /usr/irissys/mgr/messages.log
+        hostname: testbed-iris
+    # python-runner:
+    #     build: ./py-app
+    #     container_name: testbed-python-runner
+    #     ports:
+    #       - 8081:8080
+    #     depends_on:
+    #         - iris
+    #     volumes:
+    #         - ./py-app:/py-app:ro
+    #     environment:
+    #         - PYTHONUNBUFFERED=1
+    #     tty: false
+    #     restart: "no"
+

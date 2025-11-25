@@ -1,0 +1,4265 @@
+{
+  "info": {
+    "title": "",
+    "description": "",
+    "version": "",
+    "x-ISC_Namespace": "%SYS"
+  },
+  "basePath": "/api/atelier",
+  "paths": {
+    "/v1/%SYS/jobs": {
+      "get": {
+        "description": " This method returns a list of running jobs in the InterSystems IRIS instance.    GET http://localhost:57772/api/atelier/v1/%25SYS/jobs?system=1    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is an array of job descriptors.    {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"pid\": 1394,  \"namespace\": \"%SYS\",  \"routine\": \"%Studio.Debugger.1\",  \"state\": \"RUN\",  \"device\": \"|TCP|1972|1394\"  },  {  \"pid\": 1345,  \"namespace\": \"%SYS\",  \"routine\": \"RECEIVE\",  \"state\": \"HANG\",  \"device\": \"/dev/null\"  },  {  \"pid\": 1364,  \"namespace\": \"%SYS\",  \"routine\": \"%SYS.TaskSuper.1\",  \"state\": \"SELECTW\",  \"device\": \"/dev/null\"  },  {  \"pid\": 1396,  \"namespace\": \"%SYS\",  \"routine\": \"%SYS.cspServer3\",  \"state\": \"READ\",  \"device\": \"|TCP|1972|1396\"  },  {  \"pid\": 1346,  \"namespace\": \"%SYS\",  \"routine\": \"ECPWork\",  \"state\": \"RUNW\",  \"device\": \"/dev/null\"  },  {  \"pid\": 1417,  \"namespace\": \"%SYS\",  \"routine\": \"%SYS.BINDSRV\",  \"state\": \"READ\",  \"device\": \"|TCP|1972|1417\"  }  ]  }  }   ",
+        "summary": " Get a list of running jobs ",
+        "operationId": "GetJobs",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/%SYS/debug": {
+      "get": {
+        "operationId": "RunDebugger",
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/": {
+      "head": {
+        "description": " This method returns information about the server.    HEAD http://localhost:57772/api/atelier/    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    No returned content ",
+        "summary": " Ping Server ",
+        "operationId": "HeadServer",
+        "x-ISC_ServiceMethod": "HeadServer",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "description": " This method returns information about the server.    GET http://localhost:57772/api/atelier/    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is a server descriptor.    {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": {  \"version\": \"IRIS for UNIX (Apple Mac OS X for x86-64) 2081.1 (Build 513U) Fri Jan 26 2018 18:21:02 EST\",  \"id\": \"6D1CB774-B314-11E5-888C-38C986213273\",  \"api\": 1,  \"features\": [  {  \"name\": \"ENSEMBLE\",  \"enabled\": true  }  ],  \"namespaces\": [  \"%SYS\",  \"DOCBOOK\",  \"ENSDEMO\",  \"ENSEMBLE\",  \"SAMPLES\",  \"USER\"  ]  }  }  }   ",
+        "summary": " Get information about the server ",
+        "operationId": "GetServer",
+        "x-ISC_ServiceMethod": "GetServer",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/%SYS/metadata/{database}": {
+      "get": {
+        "description": " This method returns the binary contents of the METADATA.zip file for the named database    HTTP Codes returned:-    HTTP 200 if OK  HTTP 404 if the document does not exist  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "summary": " Api for delivering meta data ",
+        "operationId": "GetMetaData",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/%SYS/cspapps": {
+      "get": {
+        "description": " This method returns a list csp apps defined on the server (or namespace)    GET http://localhost:57772/api/atelier/v1/%25SYS/cspapps  GET http://localhost:57772/api/atelier/v1/%25SYS/cspapps/DOCBOOK    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is an array of csp application descriptors.    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  \"/csp/broker\",  \"/csp/docbook\",  \"/csp/documatic\",  \"/csp/samples\",  \"/csp/samples/docserver\",  \"/csp/sys\",  \"/csp/sys/bi\",  \"/csp/sys/exp\",  \"/csp/sys/mgr\",  \"/csp/sys/op\",  \"/csp/sys/sec\",  \"/csp/user\",  \"/isc/pki\",  \"/isc/studio/rules\",  \"/isc/studio/templates\",  \"/isc/studio/usertemplates\"  ]  }  }  </pre>    passing the URL parameter ?detail=1 will return an array containing objects which describe  the application in more detail :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"default\": false,  \"name\": \"/csp/broker\"  },  {  \"default\": true,  \"name\": \"/csp/sys\"  },  {  \"default\": false,  \"name\": \"/csp/sys/bi\"  },  {  \"default\": false,  \"name\": \"/csp/sys/exp\"  },  {  \"default\": false,  \"name\": \"/csp/sys/mgr\"  },  {  \"default\": false,  \"name\": \"/csp/sys/op\"  },  {  \"default\": false,  \"name\": \"/csp/sys/sec\"  },  {  \"default\": false,  \"name\": \"/isc/pki\"  },  {  \"default\": false,  \"name\": \"/isc/studio/rules\"  },  {  \"default\": false,  \"name\": \"/isc/studio/templates\"  },  {  \"default\": false,  \"name\": \"/isc/studio/usertemplates\"  }  ]  }  }  </pre> ",
+        "summary": " Get a list of defined csp apps ",
+        "operationId": "GetCSPApps",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/%SYS/cspapps/{namespace}": {
+      "get": {
+        "description": " This method returns a list csp apps defined on the server (or namespace)    GET http://localhost:57772/api/atelier/v1/%25SYS/cspapps  GET http://localhost:57772/api/atelier/v1/%25SYS/cspapps/DOCBOOK    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is an array of csp application descriptors.    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  \"/csp/broker\",  \"/csp/docbook\",  \"/csp/documatic\",  \"/csp/samples\",  \"/csp/samples/docserver\",  \"/csp/sys\",  \"/csp/sys/bi\",  \"/csp/sys/exp\",  \"/csp/sys/mgr\",  \"/csp/sys/op\",  \"/csp/sys/sec\",  \"/csp/user\",  \"/isc/pki\",  \"/isc/studio/rules\",  \"/isc/studio/templates\",  \"/isc/studio/usertemplates\"  ]  }  }  </pre>    passing the URL parameter ?detail=1 will return an array containing objects which describe  the application in more detail :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"default\": false,  \"name\": \"/csp/broker\"  },  {  \"default\": true,  \"name\": \"/csp/sys\"  },  {  \"default\": false,  \"name\": \"/csp/sys/bi\"  },  {  \"default\": false,  \"name\": \"/csp/sys/exp\"  },  {  \"default\": false,  \"name\": \"/csp/sys/mgr\"  },  {  \"default\": false,  \"name\": \"/csp/sys/op\"  },  {  \"default\": false,  \"name\": \"/csp/sys/sec\"  },  {  \"default\": false,  \"name\": \"/isc/pki\"  },  {  \"default\": false,  \"name\": \"/isc/studio/rules\"  },  {  \"default\": false,  \"name\": \"/isc/studio/templates\"  },  {  \"default\": false,  \"name\": \"/isc/studio/usertemplates\"  }  ]  }  }  </pre> ",
+        "summary": " Get a list of csp apps for a namespace ",
+        "operationId": "GetCSPApps01",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}": {
+      "get": {
+        "description": " This method returns information about a specific namespace    GET http://localhost:57772/api/atelier/v1/:namespace    GET http://localhost:57772/api/atelier/v1/DOCBOOK    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is information about a namespace    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": {  \"name\": \"DOCBOOK\",  \"db\": [  { \"name\": \"DOCBOOK\", \"crhash\": \"5046B9BF0DE\", \"default\": true },  { \"name\": \"IRISSYS\", \"crhash\": \"47763751EC\", \"default\": false },  { \"name\": \"IRISLOCALDATA\", \"crhash\": \"4776EDD1C3\", \"default\": false },  { \"name\": \"IRISLIB\", \"crhash\": \"5023332D0A7\", \"default\": false }  ],  \"features\": [  {  \"name\": \"ENSEMBLE\",  \"enabled\": false  }  ],  }  }  }  </pre> ",
+        "summary": " Return informations about a specific namespace ",
+        "operationId": "GetNamespace",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/docnames": {
+      "get": {
+        "description": " This method returns a list of document names. Cat and Type constrain the types of documents,  whilst the URL parameter 'generated' determines whether generated documents should be included   and the 'filter' parameter provides a SQL filter that can be used to match the names.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document descriptors :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [{  \"name\": \"%Activate.Enum.cls\",  \"cat\": \"CLS\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"db\": \"IRISLIB\",  \"gen\": false  }]  }  }  </pre> ",
+        "summary": " Apis to retrieve document meta data ",
+        "operationId": "GetDocNames",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01",
+        "description": " This method returns a list of document names. Cat and Type constrain the types of documents,  whilst the URL parameter 'generated' determines whether generated documents should be included   and the 'filter' parameter provides a SQL filter that can be used to match the names.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document descriptors :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [{  \"name\": \"%Activate.Enum.cls\",  \"cat\": \"CLS\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"db\": \"IRISLIB\",  \"gen\": false  }]  }  }  </pre> ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02",
+        "description": " This method returns a list of document names. Cat and Type constrain the types of documents,  whilst the URL parameter 'generated' determines whether generated documents should be included   and the 'filter' parameter provides a SQL filter that can be used to match the names.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document descriptors :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [{  \"name\": \"%Activate.Enum.cls\",  \"cat\": \"CLS\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"db\": \"IRISLIB\",  \"gen\": false  }]  }  }  </pre> ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03",
+        "description": " This method returns a list of document names. Cat and Type constrain the types of documents,  whilst the URL parameter 'generated' determines whether generated documents should be included   and the 'filter' parameter provides a SQL filter that can be used to match the names.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document descriptors :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [{  \"name\": \"%Activate.Enum.cls\",  \"cat\": \"CLS\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"db\": \"IRISLIB\",  \"gen\": false  }]  }  }  </pre> ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames",
+        "description": " This method is passed a list of database keys and hashes as a json array.  The hash values are used to determine if anything has changed in the database defined by the key.  The first call to this api necessarily POSTS an empty array. Subsequent posts can post the dbname  and dbhash to discover which documents have been modified on the server since the last call    Input format :-     [ { \"dbname\" : \"USER\", \"dbhash\" : \"KWAGbOdnRblPzANaiv1Oiu0BZLI\" }, ... ]    Output format :-     [ { \"dbname\" : \"USER\", \"dbhash\" : \"Qx1zuNaulq3b_1yR9ahZAfjkc-\", \"crhash\" : \"47763751EC\",  \"docs\" : [{ \"name\": \"User.NewClass1.cls\", \"ts\": \"2015-05-29 17:24:30.156\", \"gen\": false, \"depl\": false }, ... ]  }, ... ]    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the posted content is empty or type is anything other than CLS  HTTP 415 if content type is not application/json  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/doc/{pDocName}": {
+      "put": {
+        "description": " This method saves the supplied document    HTTP Codes returned:-    HTTP 201 if created  HTTP 400 if the resource name is an invalid document name  HTTP 404 if the resource is not found  HTTP 409 if a conflict between server and client versions is detected  HTTP 415 if not passed text/plain as content type  HTTP 425 if the document is locked and cannot be written to  HTTP 500 if an error occurs (details will be in status error array)    Return content will be a document object.  Errors pertaining to the document will be in the status property of the document object.    The URL parameter ?ignoreConflict=1 can be passed to bypass ETAG checking (see reference  above in 'GetDoc') and force the document to be written on the server.    Note that if the text on the server is changed during the save process (for example  by a source control hook) the new text will be returned in the content array  of the returned document.    Here is an example of a PUT for the document xyz.mac    <pre>  {  \"enc\": false,  \"content\": [  \"ROUTINE xyz\",  \"xyz ;\",  \" w \\\"hello\\\"\"  ]  }  </pre>    and the corresponding response :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [  ],  \"result\": {  \"name\": \"xyz.mac\",  \"db\": \"IRISSYS\",  \"ts\": \"2016-01-12 17:18:29.332\",  \"cat\": \"RTN\",  \"status\": \"\",  \"enc\": false,  \"content\": []  }  }  </pre> ",
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "operationId": "PutDoc",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "operationId": "GetDoc",
+        "description": " This method returns the text for the named document and namespace.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 304 if the document has not been modified (see https://en.wikipedia.org/wiki/HTTP_ETag)  HTTP 400 if the named resource is not a valid document name  HTTP 404 if the document does not exist  HTTP 500 if an unxpected error occurs (details will be in status error array)    Return content will contain a document object.  Errors pertaining to the document will be in the status property of the document object.  If source control hooks are enabled for the namespace any console output generated by the hook  will be captured and returned as an array of lines in the 'console' array.    The result contains the name of the requested file, the database where it is stored, its  timestamp and category (CLS - class, RTN -routine, CSP - csp file, OTH - other), as well as  the document contents which are returned in an array.     For text files this will be an array of strings and the 'enc' json field will be set to false.  For binary files this will be an array of base64 encoded chunks and the 'enc' field will be set to true.    The URL parameter ?binary=1 can be passed to force the document to be encoded as binary.    The URL parameter ?storageOnly=1 can be passed to return only the storage portion of a class.    If a 'soft' error occurs such as a 'document does not exist', additional information can be found in  the 'status' field of the result. Examples of other soft errors are 'file is locked' etc.    Here is an example of the result of asking for %Activate.Enum.cls  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": false,  \"content\": [  \"/// This class is the superclass for all enumerated types generated from\",  \"/// a type library\",  \"Class %Activate.Enum Extends %Integer [ Not ProcedureBlock, System = 3 ]\",  \"{\",  \"\",  \"}\",  \"\"  ]  }  }  </pre>    and here is the result with ?binary=1    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": true,  \"content\": [  \"Ly8vIFRoaXMgY2xhc3MgaXMgdGhlIHN1cGVyY2xhc3MgZm9yIGFsbCBlbnVtZXJhdGVkIHR5cGVzIGdlbmVyYXRlZCBmcm9tCi8vLyBhIHR5cGUgbGlicmFyeQpDbGFzcyAlQWN0aXZhdGUuRW51bSBFeHRlbmRzICVJbnRlZ2VyIFsgTm90IFByb2NlZHVyZUJsb2NrLCBTeXN0ZW0gPSAzIF0KewoKfQo=\"  ]  }  }  </pre>   ",
+        "x-ISC_ServiceMethod": "GetDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDoc",
+        "description": " This method deletes the named document in the specified namespace    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the resource name is an invalid document name  HTTP 404 if the resource is not found  HTTP 423 if the resource is locked  HTTP 500 if an error occurs (details will be in status error array)    Return content will be a document object.  errors pertaining to the document will be in the status property of the document object    Example Output :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [  ],  \"result\": {  \"name\": \"xyz.mac\",  \"db\": \"IRISSYS\",  \"ts\": \"\",  \"cat\": \"RTN\",  \"status\": \"\",  \"enc\": false,  \"content\": []  }  }  </pre> ",
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc",
+        "description": " This method returns the HttpHeader for the named document and namespace.  This information primarily contains the timestamp and can be used to detect  discrepancies between server and client version    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the resource name is an invalid document name  HTTP 404 if the resource is not found  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/docs": {
+      "post": {
+        "description": " This method returns the text for the all the specified documents in the namespace.  A list of documents to be fetched is passed in the body of the http request.  The request body is simply a JSON array of names of documents you want to fetch [ \"%Activate.Enum.cls\", ... ]    HTTP Codes returned:-    HTTP 200 if OK  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document objects. Errors pertaining to a document  will be in the status property of each document object.    See the 'GetDoc' description above for a detailed explanation of the individual fields returned.  This method does NOT support the storageOnly flag. Neither does it do ETAG checking (and therefore  will NOT return an HTTP 304 under any circumstances).   ",
+        "summary": " Apis to retrieve and delete list of documents ",
+        "operationId": "GetDocs",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs",
+        "description": " This method deletes the list of named documents which is passed in the body of the http request.  as a JSON array [ \"%Activate.Enum.cls\", ... ]    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the posted data does not contain a JSON array  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document objects. Errors pertaining to a each document  will be in the status property of each document object. If the status is an empty string then   the document was deleted successfully. Otherwise the document was NOT deleted. For deleted docs  the db entry will indicate from which database the doc was deleted.    POSTED: [\"xyz.mac\",\"notexist.cls\"]    Result :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [  ],  \"result\": [  {  \"name\": \"xyz.mac\",  \"db\": \"\",  \"status\": \"\"  },  {  \"name\": \"notexist.cls\",  \"db\": \"\",  \"status\": \"ERROR #5001: Document Does Not Exist: User.notexist.cls [zExistsDoc+3^%Atelier.v1.Utils.General.1:%SYS]\"  }  ]  }  </pre> ",
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/action/compile": {
+      "post": {
+        "description": " This method permits the compilation of more than one document at a time.  The method expects a content body to be encoded in JSON and contain an  array of items (document names) to be compiled.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the resource name is an invalid document name  HTTP 404 if the resource is not found  HTTP 423 if the document is locked  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of document objects.  Errors pertaining to the document will be in the status property of the document object.    The URL parameter 'flags' can be passed (default 'cuk') which will be passed to the compiler.  The URL parameter 'source' can be passed with a value of 0 if you don't want the source of the  compiled document to be returned.    POSTED: [\"Atelier.NewClass1.cls\"]    Example Output :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [  \"Compilation started on 01/12/2016 17:44:00 with qualifiers 'cuk'\",  \"Compiling class Atelier.NewClass1\",  \"Compiling table Atelier.NewClass1\",  \"Compiling routine Atelier.NewClass1.1\",  \"Compilation finished successfully in 0.067s.\",  \"\"  ],  \"result\": {  \"content\": [  {  \"name\": \"Atelier.NewClass1.cls\",  \"status\": \"\",  \"content\": [  \"Storage Default\",  \"{\",  \"<Data name=\\\"NewClass1DefaultData\\\">\",  \"<Value name=\\\"1\\\">\",  \"<Value>%%CLASSNAME</Value>\",  \"</Value>\",  \"</Data>\",  \"<DataLocation>^Atelier.NewClass1D</DataLocation>\",  \"<DefaultData>NewClass1DefaultData</DefaultData>\",  \"<IdLocation>^Atelier.NewClass1D</IdLocation>\",  \"<IndexLocation>^Atelier.NewClass1I</IndexLocation>\",  \"<StreamLocation>^Atelier.NewClass1S</StreamLocation>\",  \"<Type>%Storage.Persistent</Type>\",  \"}\",  \"\"  ],  \"db\": \"IRISSYS\",  \"ts\": \"2016-01-12 17:44:00.053\",  \"enc\": false  }  ]  }  }  </pre> ",
+        "summary": " Apis to compile documents ",
+        "operationId": "Compile",
+        "x-ISC_ServiceMethod": "Compile",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/action/index": {
+      "post": {
+        "description": " This method returns the indices for the all the specified documents in the namespace.  A list of documents to be indexed is passed in the body of the http request.  The request body is simply a JSON array of names of documents you want to index [ \"%Activate.Enum.cls\", ... ]    NOTE: Currently we only support the indexing of classes    HTTP Codes returned:-    HTTP 200 if OK  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of index document objects. Errors pertaining to a document  will be in the status property of each document object. The index contains information relating  to the structure and documentation of documents on the server and will vary by the category to  which the document belongs. Below is an example for a class.  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"name\": \"%Activate.GenericObject.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"gen\": false,  \"others\": [  \"%Activate.GenericObject.1.INT\"  ],  \"cat\": \"CLS\",  \"content\": {  \"desc\": \"This class provides functionality to create an ActiveX object, invoke its methods\\nand Get/Set its properties by name.\",  \"depl\": false,  \"depr\": false,  \"final\": false,  \"hidden\": false,  \"super\": [  \"%Activate.IDispatch\"  ],  \"methods\": [  {  \"name\": \"CreateObject\",  \"desc\": \"This method is used to create a generic object given only its progid. If the object\\ncannot be found an exception is thrown. The return value should be tested against\\n$$$NULLOREF in the usual manner to ensure that the object has been successfully\\ncreated\",  \"depr\": false,  \"final\": true,  \"internal\": false,  \"private\": false,  \"scope\": \"class\",  \"returntype\": \"%Library.RegisteredObject\",  \"args\": [  {  \"name\": \"Progid\",  \"type\": \"%Library.String\"  }  ]  },  {  \"name\": \"GetObject\",  \"desc\": \"This method is used to create a generic object from a moniker. If the object\\ncannot be found an exception is thrown. The return value should be tested against\\n$$$NULLOREF in the usual manner to ensure that the object has been successfully\\ncreated.\",  \"depr\": false,  \"final\": true,  \"internal\": false,  \"private\": false,  \"scope\": \"class\",  \"returntype\": \"%Library.RegisteredObject\",  \"args\": [  {  \"name\": \"Moniker\",  \"type\": \"%Library.String\"  }  ]  }  ],  \"parameters\": [],  \"properties\": []  },  \"status\": \"\"  }  ]  }  }  </pre> ",
+        "summary": " index one or more classes ",
+        "operationId": "Index",
+        "x-ISC_ServiceMethod": "Index",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/action/query": {
+      "post": {
+        "description": " This method returns the results of running the specified query in the specified namespace.  The request body is simply a JSON object which specifies the query  {  \"query\":\"call %studio.debugger_processlist()\",  \"parameters\" : []  }    HTTP Codes returned:-    HTTP 200 if OK  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of objects. Errors will be in the status property of each document object.  The objects contain information relating to each row returned by the query.  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  ]  }  }  </pre> ",
+        "summary": " run a query ",
+        "operationId": "Query",
+        "x-ISC_ServiceMethod": "Query",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/work": {
+      "post": {
+        "description": " This call queues an item for work. On success it returns 202 and sets the 'Location' header  to indicate where the results can be retrieved from with an HTTP GET.    HTTP Codes returned:-    HTTP 202 if Accepted  HTTP 404 if the request type does not exist  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "summary": " Apis to support long-running requests ",
+        "operationId": "QueueAsync",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync",
+        "description": " This call polls a queued item for console output and results. On success it returns 200.   Console output and results are found in the standard locations for Atelier REST APIs.  If there is more output expected the server will set the 'Retry-After' header. The client  should read this header to determine if another call should be made.  When the result of processing is available (or the work is finished) a GET to this API   will return any results in the 'content' field and (crucially) will NOT set the 'Retry-After'  header. This is an indication that processing is finished.    HTTP Codes returned:-    HTTP 200 if Accepted  HTTP 404 if the document does not exist  HTTP 410 if the results have been purged (client never retrieved after lengthy delay)  HTTP 423 if the queue is locked  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "PollAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync",
+        "description": " This call cancels a work request that has been previously queued.    HTTP Codes returned:-    HTTP 200 if Cancelled  HTTP 202 if Accepted and Cancel issued  HTTP 404 if the request does not exist  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/ens/classes/{type}": {
+      "get": {
+        "description": " This method returns a list of Ensemble class names.  HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is an array of selected Ensemble class names.    These are the query types:  Adapters 1  InboundAdapters 2  OutboundAdapters 3  Messages 4  Requests 5  Responses 6  BusinessServices 7  BusinessProcesses 8  BusinessOperations 9  DataTransformation 10  Production 11  BusinessHost 12  Dashboard 13  Rule 14    Example response:    <pre>  {  status: {  errors: []  summary: \"\"  }  console: []  result: {  content: [  \"Ens.Enterprise.MsgBank.BankTCPAdapter\"  \"Ens.Enterprise.MsgBank.ClientTCPAdapter\"  \"Ens.InboundAdapter\"  \"Ens.OutboundAdapter\"  ]  }  }  </pre> ",
+        "summary": " Ensemble support ",
+        "operationId": "GetEnsClassType",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass",
+        "description": " This method returns the input and output type for the adapter.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 404 if the adapter does not exist  HTTP 500 if an error occurs (details will be in status error array)    Example response:    <pre>  {  status: {  errors: []  summary: \"\"  }  console: []  result: {  content: {  input: \"%Stream.Object\"  output: \"%String\"  }  }  }  </pre> ",
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/cvt/doc/xml": {
+      "post": {
+        "description": " This method converts a client Doc to the corresponding XML.  Note: This is NOT a public API and will be retired in a future version  Customers SHOULD NOT call this API from their own code    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the posted content is empty  HTTP 415 if content type is not application/json  HTTP 500 if an error occurs (details will be in status error array)    Returned content is XML.   ",
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "operationId": "CvtClientDocToXml",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v1/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc",
+        "description": " This method converts a XML to the corresponding client document format.  Note: This is NOT a public API and will be retired in a later version  Customers SHOULD NOT call this API from their own code    HTTP Codes returned:-    HTTP 200 if OK  HTTP 400 if the posted content is empty  HTTP 415 if content type is not application/xml  HTTP 500 if an error occurs (details will be in status error array)    Returned content is plain text.   ",
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/debug": {
+      "get": {
+        "operationId": "RunDebugger001",
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/jobs": {
+      "get": {
+        "summary": " Get a list of running jobs ",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "operationId": "GetJobs001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/metadata/{database}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Api for delivering meta data ",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "operationId": "GetMetaData001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/cspapps": {
+      "get": {
+        "summary": " Get a list of defined csp apps ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/cspapps/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get a list of csp apps for a namespace ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps01001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Return informations about a specific namespace ",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "operationId": "GetNamespace001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/docnames": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Apis to retrieve document meta data ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "operationId": "GetDocNames001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/doc/{pDocName}": {
+      "put": {
+        "description": " This method saves the supplied document    HTTP Codes returned:-    HTTP 201 if created  HTTP 400 if the resource name is an invalid document name  HTTP 404 if the resource is not found  HTTP 409 if a conflict between server and client versions is detected  HTTP 415 if not passed text/plain as content type  HTTP 425 if the document is locked and cannot be written to  HTTP 500 if an error occurs (details will be in status error array)    Return content will be a document object.  Errors pertaining to the document will be in the status property of the document object.    The URL parameter ?ignoreConflict=1 can be passed to bypass ETAG checking (see reference  above in 'GetDoc') and force the document to be written on the server.    Note that if the text on the server is changed during the save process (for example  by a source control hook) the new text will be returned in the content array  of the returned document.    Here is an example of a PUT for the document xyz.mac    <pre>  {  \"enc\": false,  \"content\": [  \"ROUTINE xyz\",  \"xyz ;\",  \" w \\\"hello\\\"\"  ]  }  </pre>    and the corresponding response :-    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [  ],  \"result\": {  \"name\": \"xyz.mac\",  \"db\": \"IRISSYS\",  \"ts\": \"2016-01-12 17:18:29.332\",  \"cat\": \"RTN\",  \"status\": \"\",  \"enc\": false,  \"content\": []  }  }  </pre> ",
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "operationId": "PutDoc001",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "operationId": "GetDoc001",
+        "description": " This method returns the text for the named document and namespace.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 304 if the document has not been modified (see https://en.wikipedia.org/wiki/HTTP_ETag)  HTTP 400 if the named resource is not a valid document name  HTTP 404 if the document does not exist  HTTP 500 if an unxpected error occurs (details will be in status error array)    Return content will contain a document object.  Errors pertaining to the document will be in the status property of the document object.  If source control hooks are enabled for the namespace any console output generated by the hook  will be captured and returned as an array of lines in the 'console' array.    The result contains the name of the requested document, the database where it is stored, its  timestamp and category (CLS - class, RTN - routine, CSP - csp, OTH - other), as well as  the document contents which are returned in an array.     For text documents this will be an array of strings and the 'enc' json field will be set to false.  For binary documents this will be an array of base64 encoded chunks and the 'enc' field will be set to true.    The URL parameter ?binary=1 can be passed to force the document to be encoded as binary.    The URL parameter ?storageOnly=1 can be passed to return only the storage portion of a class.    The URL parameter ?format= can be passed to specify the source format. The choices are  \"udl\" (the default) or \"xml\".    If a 'soft' error occurs such as a 'document does not exist', additional information can be found in  the 'status' field of the result. Examples of other soft errors are 'file is locked' etc.    Here is an example of the result of asking for %Activate.Enum.cls  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": false,  \"content\": [  \"/// This class is the superclass for all enumerated types generated from\",  \"/// a type library\",  \"Class %Activate.Enum Extends %Integer [ Not ProcedureBlock, System = 3 ]\",  \"{\",  \"\",  \"}\",  \"\"  ]  }  }  </pre>  and here is the result with ?binary=1    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": true,  \"content\": [  \"Ly8vIFRoaXMgY2xhc3MgaXMgdGhlIHN1cGVyY2xhc3MgZm9yIGFsbCBlbnVtZXJhdGVkIHR5cGVzIGdlbmVyYXRlZCBmcm9tCi8vLyBhIHR5cGUgbGlicmFyeQpDbGFzcyAlQWN0aXZhdGUuRW51bSBFeHRlbmRzICVJbnRlZ2VyIFsgTm90IFByb2NlZHVyZUJsb2NrLCBTeXN0ZW0gPSAzIF0KewoKfQo=\"  ]  }  }  </pre>   ",
+        "x-ISC_ServiceMethod": "GetDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/doc/(.*)": {
+      "delete": {
+        "operationId": "DeleteDoc001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/docs": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve and delete list of documents ",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "operationId": "GetDocs001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/compile": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to compile documents ",
+        "x-ISC_ServiceMethod": "Compile",
+        "operationId": "Compile001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/index": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " index one or more classes ",
+        "x-ISC_ServiceMethod": "Index",
+        "operationId": "Index001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/query": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " run a query ",
+        "x-ISC_ServiceMethod": "Query",
+        "operationId": "Query001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/work": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to support long-running requests ",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "operationId": "QueueAsync001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "PollAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/ens/classes/{type}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "summary": " Ensemble support ",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "operationId": "GetEnsClassType001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/cvt/doc/xml": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "operationId": "CvtClientDocToXml001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc001",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/%SYS/cspdebugid": {
+      "get": {
+        "description": " This method returns an id for use with CSP debugging    GET http://localhost:57772/api/atelier/v2/%25SYS/cspdebugid    HTTP Codes returned:-    HTTP 200 if OK  HTTP 500 if an error occurs (details will be in status error array)    Returned content is an integer debug identifier    {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": { id: NNNNNN }  }  }   ",
+        "summary": " Get a debug id for debugging a csp application ",
+        "operationId": "GetCSPDebugId",
+        "x-ISC_ServiceMethod": "GetCSPDebugId",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/getmacrolist": {
+      "post": {
+        "description": " Input request:  <pre>  {  \"docname\": \"MyClass.cls\",  \"hash\": \"XXXX\",  \"cursor\": \"XXX\",  \"superclasses\": [\"class1\",...],  \"includes\": [\"include1\",...],  \"includegenerators\": [\"generator1\",...],  \"imports\": [\"package1\",...],  \"mode\": \"generator\" or \"\"  }  </pre>  \"hash\" is a null string or the value returned from a previous call for this document.  If the server contents have not changed, the result will be this same hash value  and nothing else.   \"cursor\" is a null string or the value returned from the previous call.   Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": {  \"content\": {  \"hash\": \"XXXX\",  \"cursor\": \"XXXX\",  \"macros\": [\"macro1\",...]  }  }  }  </pre>  \"hash\" is a value indicating the current contents of the server. If this value  is passed in the next request for this document and the server contents have  not changed, nothing needs to be returned.   \"cursor\" will be the null string if the macro list is complete. If it is not  null, another call should be made, passing this cursor value, to get the next part  of the macro list.   ",
+        "summary": " Get a list of macros for prompt after $$$ ",
+        "operationId": "GetMacroList",
+        "x-ISC_ServiceMethod": "GetMacroList",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/getmacrosignature": {
+      "post": {
+        "description": " Input request:  <pre>  {  \"docname\": \"MyClass.cls\",  \"macroname\": \"mymac\",  \"superclasses\": [\"class1\",...],  \"includes\": [\"include1\",...],  \"includegenerators\": [\"generator1\",...],  \"imports\": [\"package1\",...],  \"mode\": \"generator\" or \"\"  }  </pre>  Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": {  \"content\": {  \"signature\": \"(arg1,arg2)\"  }  }  }  </pre>   ",
+        "summary": " Get the signature of a macro ",
+        "operationId": "GetMacroSignature",
+        "x-ISC_ServiceMethod": "GetMacroSignature",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/getmacrolocation": {
+      "post": {
+        "description": " Input request:  <pre>  {  \"docname\": \"MyClass.cls\",  \"macroname\": \"mymac\",  \"superclasses\": [\"class1\",...],  \"includes\": [\"include1\",...],  \"includegenerators\": [\"generator1\",...],  \"imports\": [\"package1\",...],  \"mode\": \"generator\" or \"\"  }  </pre>  Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": {  \"content\": {  \"document\": \"name.inc\",  \"line\": lineno  }  }  }  </pre>   ",
+        "summary": " Get the location of a macro ",
+        "operationId": "GetMacroLocation",
+        "x-ISC_ServiceMethod": "GetMacroLocation",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/getmacrodefinition": {
+      "post": {
+        "description": " Input request:  <pre>  {  \"docname\": \"MyClass.cls\",  \"macroname\": \"mymac\",  \"superclasses\": [\"class1\",...],  \"includes\": [\"include1\",...],  \"includegenerators\": [\"generator1\",...],  \"imports\": [\"package1\",...],  \"mode\": \"generator\" or \"\"  }  </pre>  Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": {  \"content\": {  \"definition\": [\"line1\",\"line2\",...]  }  }  }  </pre>   ",
+        "summary": " Get the definition of a macro ",
+        "operationId": "GetMacroDefinition",
+        "x-ISC_ServiceMethod": "GetMacroDefinition",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/getmacroexpansion": {
+      "post": {
+        "description": " Input request:  <pre>  {  \"docname\": \"MyClass.cls\",  \"macroname\": \"mymac\",  \"arguments\": \"(arg1,arg2,...)\",  \"superclasses\": [\"class1\",...],  \"includes\": [\"include1\",...],  \"includegenerators\": [\"generator1\",...],  \"imports\": [\"package1\",...],  \"mode\": \"generator\" or \"\"  }  </pre>  Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": {  \"content\": {  \"expansion\": [\"line1\",\"line2\",...]  }  }  }  </pre>   ",
+        "summary": " Get the expansion of a macro with arguments ",
+        "operationId": "GetMacroExpansion",
+        "x-ISC_ServiceMethod": "GetMacroExpansion",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/action/search": {
+      "get": {
+        "description": " This method searches a set of documents using a Regular Expression or a text string.<br>  <br>HTTP Codes returned:-  <br>  <br>HTTP 200 if request is OK  <br>HTTP 400 if there are missing arguments  <br><br>  Input request:  <pre>  GET localhost:57772/api/atelier/v2/:namespace/action/search?query=expr&documents=list&sys=1&gen=1&amp;regex=1&max=200  </pre>  Required arguments are:<br>  query = the search expression, a regular expression or a plain text string<br>  documents = a comma-separated list of documents or masks with the * wild card<br>  <br>  Optional arguments are:<br>  regex = 0 or 1 (default 1) whether the query string is a regular expression or not<br>  sys = 0 or 1 (default 0) include sytem documents in the search<br>  gen = 0 or 1 (default 0) include generated documents in the search<br>  max = nnn (default 200) maxinum number of results to return<br>  <br>  The result is returned as the console output of the search and as a JSON array.<br>  <br>  Example input to search for the word Email in all classes and MAC routines:  <pre>  GET localhost:57772/api/atelier/v2/SAMPLES/action/search?query=.*\\bEmail\\b.*&documents=*.cls,*.mac  </pre>  Returned content (some is omitted here):  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [  \"\",  \"Searching for '.*\\\\bEmail\\\\b.*' in '*.cls,*.mac'\",  \"Cinema.Utils.cls(SendEmail+28): Quit \\\"Email confirmation has been sent to \\\" _ Addr\",  \"Wasabi.Data.Employee.cls(Email)[Type]: Wasabi.Common.DT.Email\",  \"Wasabi.Data.Employee.cls(CopyFrom+26): set ..Email = employee.Email\",  \"ZAUTHENTICATE.mac(175): Properties(\\\"EmailAddress\\\") - Email address\",  \"Found 11 occurrence/s in 7 file/s.\"  ],  \"result\": [  {  \"doc\": \"Cinema.Utils.cls\",  \"matches\": [  {  \"member\": \"SendEmail\",  \"line\": 28,  \"text\": \"Quit \\\"Email confirmation has been sent to \\\" _ Addr\"  }  ]  },  {  \"doc\": \"Wasabi.Data.Employee.cls\",  \"matches\": [  {  \"member\": \"Email\",  \"attr\": \"Type\",  \"text\": \"Wasabi.Common.DT.Email\"  },  {  \"member\": \"CopyFrom\",  \"line\": 26,  \"text\": \"set ..Email = employee.Email\"  }  ]  },  {  \"doc\": \"ZAUTHENTICATE.mac\",  \"matches\": [  {  \"line\": \"175\",  \"text\": \"Properties(\\\"EmailAddress\\\") - Email address\"  }  ]  }  ]  } ",
+        "summary": " Do a server find in files ",
+        "operationId": "Search",
+        "x-ISC_ServiceMethod": "Search",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v2/{namespace}/saschema/{pUrl}": {
+      "get": {
+        "description": " This method returns the textual definition of a Studio Assist Schema.  Pass the url of the schema namespace to retrieve the definition.<br>  If the definition does not exist an HTTP 404 Not Found will be returned.<br>  If the definition does exist but needs to be recalculated, HTTP 202 Acepted will be returned and the location  header will point to the url which should be called in the future to retrieve the value.<br>  If the definition checksum matches the value passed in the IF_NONE_MATCH header, an  HTTP 304 Not Modified will be returned.<br>  If the definition is up to date it will be returned as an array of lines in the result and  the ETAG header will be set with the current checksum.  <br><br>  Input request:  <pre>  GET localhost:57772/api/atelier/v2/%SYS/saschema/http://www.intersystems.com/urlmap  </pre>    Returned content:  <pre>  {  \"status\": { \"errors\": [], \"summary\": \"\" },  \"console\": [],  \"result\": [...]  }  </pre>   ",
+        "summary": " Get the specified SA Schema definition ",
+        "operationId": "GetSASchemaDefinition",
+        "x-ISC_ServiceMethod": "GetSASchemaDefinition",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pUrl",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/debug": {
+      "get": {
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "operationId": "RunDebugger002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/jobs": {
+      "get": {
+        "summary": " Get a list of running jobs ",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "operationId": "GetJobs002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/metadata/{database}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Api for delivering meta data ",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "operationId": "GetMetaData002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/cspapps": {
+      "get": {
+        "summary": " Get a list of defined csp apps ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/cspapps/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get a list of csp apps for a namespace ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps01002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Return informations about a specific namespace ",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "operationId": "GetNamespace002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/docnames": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Apis to retrieve document meta data ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "operationId": "GetDocNames002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/doc/(.*)": {
+      "put": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "operationId": "PutDoc002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "operationId": "GetDoc002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDoc002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/docs": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve and delete list of documents ",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "operationId": "GetDocs002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/compile": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to compile documents ",
+        "x-ISC_ServiceMethod": "Compile",
+        "operationId": "Compile002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/index": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " index one or more classes ",
+        "x-ISC_ServiceMethod": "Index",
+        "operationId": "Index002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/query": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " run a query ",
+        "x-ISC_ServiceMethod": "Query",
+        "operationId": "Query002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/work": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to support long-running requests ",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "operationId": "QueueAsync002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "PollAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/ens/classes/{type}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "summary": " Ensemble support ",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "operationId": "GetEnsClassType002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/cvt/doc/xml": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "operationId": "CvtClientDocToXml002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc002",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/%SYS/cspdebugid": {
+      "get": {
+        "summary": " Get a debug id for debugging a csp application ",
+        "x-ISC_ServiceMethod": "GetCSPDebugId",
+        "operationId": "GetCSPDebugId001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/getmacrolist": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get a list of macros for prompt after $$$ ",
+        "x-ISC_ServiceMethod": "GetMacroList",
+        "operationId": "GetMacroList001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/getmacrosignature": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the signature of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroSignature",
+        "operationId": "GetMacroSignature001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/getmacrolocation": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the location of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroLocation",
+        "operationId": "GetMacroLocation001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/getmacrodefinition": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the definition of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroDefinition",
+        "operationId": "GetMacroDefinition001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/getmacroexpansion": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the expansion of a macro with arguments ",
+        "x-ISC_ServiceMethod": "GetMacroExpansion",
+        "operationId": "GetMacroExpansion001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/action/search": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Do a server find in files ",
+        "x-ISC_ServiceMethod": "Search",
+        "operationId": "Search001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v3/{namespace}/saschema/(.*)": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get the specified SA Schema definition ",
+        "x-ISC_ServiceMethod": "GetSASchemaDefinition",
+        "operationId": "GetSASchemaDefinition001",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/debug": {
+      "get": {
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "operationId": "RunDebugger003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/jobs": {
+      "get": {
+        "summary": " Get a list of running jobs ",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "operationId": "GetJobs003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/metadata/{database}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Api for delivering meta data ",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "operationId": "GetMetaData003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/cspapps": {
+      "get": {
+        "summary": " Get a list of defined csp apps ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/cspapps/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get a list of csp apps for a namespace ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps01003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Return informations about a specific namespace ",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "operationId": "GetNamespace003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/docnames": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Apis to retrieve document meta data ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "operationId": "GetDocNames003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/doc/(.*)": {
+      "put": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "operationId": "PutDoc003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDoc003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/doc/{pDocName}": {
+      "get": {
+        "operationId": "GetDoc003",
+        "description": " This method returns the text for the named document and namespace.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 304 if the document has not been modified (see https://en.wikipedia.org/wiki/HTTP_ETag)  HTTP 400 if the named resource is not a valid document name  HTTP 404 if the document does not exist  HTTP 500 if an unxpected error occurs (details will be in status error array)    Return content will contain a document object.  Errors pertaining to the document will be in the status property of the document object.  If source control hooks are enabled for the namespace any console output generated by the hook  will be captured and returned as an array of lines in the 'console' array.    The result contains the name of the requested document, the database where it is stored, its  timestamp and category (CLS - class, RTN - routine, CSP - csp, OTH - other), as well as  the document contents which are returned in an array.     For text documents this will be an array of strings and the 'enc' json field will be set to false.  For binary documents this will be an array of base64 encoded chunks and the 'enc' field will be set to true.    The URL parameter ?binary=1 can be passed to force the document to be encoded as binary.    The URL parameter ?storageOnly=1 can be passed to return only the storage portion of a class.    The URL parameter ?format= can be passed to specify the source format. The choices are  \"udl\" (the default), \"udl-multiline\" or \"xml\". Specifying \"udl-multiline\" will format method   arguments on multiple lines.    If a 'soft' error occurs such as a 'document does not exist', additional information can be found in  the 'status' field of the result. Examples of other soft errors are 'file is locked' etc.    Here is an example of the result of asking for %Activate.Enum.cls  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": false,  \"content\": [  \"/// This class is the superclass for all enumerated types generated from\",  \"/// a type library\",  \"Class %Activate.Enum Extends %Integer [ Not ProcedureBlock, System = 3 ]\",  \"{\",  \"\",  \"}\",  \"\"  ]  }  }  </pre>  and here is the result with ?binary=1    <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"name\": \"%Activate.Enum.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"cat\": \"CLS\",  \"status\": \"\",  \"enc\": true,  \"content\": [  \"Ly8vIFRoaXMgY2xhc3MgaXMgdGhlIHN1cGVyY2xhc3MgZm9yIGFsbCBlbnVtZXJhdGVkIHR5cGVzIGdlbmVyYXRlZCBmcm9tCi8vLyBhIHR5cGUgbGlicmFyeQpDbGFzcyAlQWN0aXZhdGUuRW51bSBFeHRlbmRzICVJbnRlZ2VyIFsgTm90IFByb2NlZHVyZUJsb2NrLCBTeXN0ZW0gPSAzIF0KewoKfQo=\"  ]  }  }  </pre>   ",
+        "x-ISC_ServiceMethod": "GetDoc",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pDocName",
+            "pattern": "(.*)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/docs": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve and delete list of documents ",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "operationId": "GetDocs003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/compile": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to compile documents ",
+        "x-ISC_ServiceMethod": "Compile",
+        "operationId": "Compile003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/index": {
+      "post": {
+        "description": " This method returns the indices for the all the specified documents in the namespace.  A list of documents to be indexed is passed in the body of the http request.  The request body is simply a JSON array of names of documents you want to index [ \"%Activate.Enum.cls\", ... ]    An optional label+offset location can be included at the end of a document name, delimited by a colon: [ \"%Activate.Enum.cls:method+5\", ... ]  If a location is provided for a document, the values in the \"others\" array in the response object will contain the  document name followed by a ':' and then the offset corresponding to the location in the requested document.    NOTE: Currently we only support the indexing of classes    HTTP Codes returned:-    HTTP 200 if OK  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    Return content will be an array of index document objects. Errors pertaining to a document  will be in the status property of each document object. The index contains information relating  to the structure and documentation of documents on the server and will vary by the category to  which the document belongs. Below is an example for a class.  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"name\": \"%Activate.GenericObject.cls\",  \"db\": \"IRISLIB\",  \"ts\": \"2016-01-04 14:00:04.000\",  \"gen\": false,  \"others\": [  \"%Activate.GenericObject.1.INT\"  ],  \"cat\": \"CLS\",  \"content\": {  \"desc\": \"This class provides functionality to create an ActiveX object, invoke its methods\\nand Get/Set its properties by name.\",  \"depl\": false,  \"depr\": false,  \"final\": false,  \"hidden\": false,  \"super\": [  \"%Activate.IDispatch\"  ],  \"methods\": [  {  \"name\": \"CreateObject\",  \"desc\": \"This method is used to create a generic object given only its progid. If the object\\ncannot be found an exception is thrown. The return value should be tested against\\n$$$NULLOREF in the usual manner to ensure that the object has been successfully\\ncreated\",  \"depr\": false,  \"final\": true,  \"internal\": false,  \"private\": false,  \"scope\": \"class\",  \"returntype\": \"%Library.RegisteredObject\",  \"args\": [  {  \"name\": \"Progid\",  \"type\": \"%Library.String\"  }  ]  },  {  \"name\": \"GetObject\",  \"desc\": \"This method is used to create a generic object from a moniker. If the object\\ncannot be found an exception is thrown. The return value should be tested against\\n$$$NULLOREF in the usual manner to ensure that the object has been successfully\\ncreated.\",  \"depr\": false,  \"final\": true,  \"internal\": false,  \"private\": false,  \"scope\": \"class\",  \"returntype\": \"%Library.RegisteredObject\",  \"args\": [  {  \"name\": \"Moniker\",  \"type\": \"%Library.String\"  }  ]  }  ],  \"parameters\": [],  \"properties\": []  },  \"status\": \"\"  }  ]  }  }  </pre> ",
+        "summary": " index one or more classes ",
+        "operationId": "Index003",
+        "x-ISC_ServiceMethod": "Index",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/query": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " run a query ",
+        "x-ISC_ServiceMethod": "Query",
+        "operationId": "Query003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/work": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to support long-running requests ",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "operationId": "QueueAsync003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "PollAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/ens/classes/{type}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "summary": " Ensemble support ",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "operationId": "GetEnsClassType003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/cvt/doc/xml": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "operationId": "CvtClientDocToXml003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc003",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/%SYS/cspdebugid": {
+      "get": {
+        "summary": " Get a debug id for debugging a csp application ",
+        "x-ISC_ServiceMethod": "GetCSPDebugId",
+        "operationId": "GetCSPDebugId002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/getmacrolist": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get a list of macros for prompt after $$$ ",
+        "x-ISC_ServiceMethod": "GetMacroList",
+        "operationId": "GetMacroList002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/getmacrosignature": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the signature of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroSignature",
+        "operationId": "GetMacroSignature002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/getmacrolocation": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the location of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroLocation",
+        "operationId": "GetMacroLocation002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/getmacrodefinition": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the definition of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroDefinition",
+        "operationId": "GetMacroDefinition002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/getmacroexpansion": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the expansion of a macro with arguments ",
+        "x-ISC_ServiceMethod": "GetMacroExpansion",
+        "operationId": "GetMacroExpansion002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/action/search": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Do a server find in files ",
+        "x-ISC_ServiceMethod": "Search",
+        "operationId": "Search002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v4/{namespace}/saschema/(.*)": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get the specified SA Schema definition ",
+        "x-ISC_ServiceMethod": "GetSASchemaDefinition",
+        "operationId": "GetSASchemaDefinition002",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/debug": {
+      "get": {
+        "operationId": "RunDebugger004",
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/jobs": {
+      "get": {
+        "summary": " Get a list of running jobs ",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "operationId": "GetJobs004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/metadata/{database}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Api for delivering meta data ",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "operationId": "GetMetaData004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/cspapps": {
+      "get": {
+        "summary": " Get a list of defined csp apps ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/cspapps/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get a list of csp apps for a namespace ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps01004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Return informations about a specific namespace ",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "operationId": "GetNamespace004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/docnames": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Apis to retrieve document meta data ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "operationId": "GetDocNames004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/doc/(.*)": {
+      "put": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "operationId": "PutDoc004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "operationId": "GetDoc004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDoc004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/docs": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve and delete list of documents ",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "operationId": "GetDocs004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/compile": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to compile documents ",
+        "x-ISC_ServiceMethod": "Compile",
+        "operationId": "Compile004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/index": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " index one or more classes ",
+        "x-ISC_ServiceMethod": "Index",
+        "operationId": "Index004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/query": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " run a query ",
+        "x-ISC_ServiceMethod": "Query",
+        "operationId": "Query004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/work": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to support long-running requests ",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "operationId": "QueueAsync004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "PollAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/ens/classes/{type}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "summary": " Ensemble support ",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "operationId": "GetEnsClassType004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/cvt/doc/xml": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "operationId": "CvtClientDocToXml004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc004",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/%SYS/cspdebugid": {
+      "get": {
+        "summary": " Get a debug id for debugging a csp application ",
+        "x-ISC_ServiceMethod": "GetCSPDebugId",
+        "operationId": "GetCSPDebugId003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/getmacrolist": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get a list of macros for prompt after $$$ ",
+        "x-ISC_ServiceMethod": "GetMacroList",
+        "operationId": "GetMacroList003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/getmacrosignature": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the signature of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroSignature",
+        "operationId": "GetMacroSignature003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/getmacrolocation": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the location of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroLocation",
+        "operationId": "GetMacroLocation003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/getmacrodefinition": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the definition of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroDefinition",
+        "operationId": "GetMacroDefinition003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/getmacroexpansion": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the expansion of a macro with arguments ",
+        "x-ISC_ServiceMethod": "GetMacroExpansion",
+        "operationId": "GetMacroExpansion003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/action/search": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Do a server find in files ",
+        "x-ISC_ServiceMethod": "Search",
+        "operationId": "Search003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v5/{namespace}/saschema/(.*)": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get the specified SA Schema definition ",
+        "x-ISC_ServiceMethod": "GetSASchemaDefinition",
+        "operationId": "GetSASchemaDefinition003",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/debug": {
+      "get": {
+        "summary": " Run the debugger ",
+        "x-ISC_ServiceMethod": "RunDebugger",
+        "operationId": "RunDebugger005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/jobs": {
+      "get": {
+        "summary": " Get a list of running jobs ",
+        "x-ISC_ServiceMethod": "GetJobs",
+        "operationId": "GetJobs005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/metadata/{database}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Api for delivering meta data ",
+        "x-ISC_ServiceMethod": "GetMetaData",
+        "operationId": "GetMetaData005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/cspapps": {
+      "get": {
+        "summary": " Get a list of defined csp apps ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/cspapps/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get a list of csp apps for a namespace ",
+        "x-ISC_ServiceMethod": "GetCSPApps",
+        "operationId": "GetCSPApps01005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Return informations about a specific namespace ",
+        "x-ISC_ServiceMethod": "GetNamespace",
+        "operationId": "GetNamespace005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/docnames": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Apis to retrieve document meta data ",
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "operationId": "GetDocNames005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/docnames/{cat}": {
+      "get": {
+        "operationId": "GetDocNames01005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/docnames/{cat}/": {
+      "get": {
+        "operationId": "GetDocNames02005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/docnames/{cat}/{type}": {
+      "get": {
+        "operationId": "GetDocNames03005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "cat", "in": "path", "required": true, "type": "string" },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/modified/{type}": {
+      "post": {
+        "operationId": "GetModifiedDocNames005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetModifiedDocNames",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/doc/(.*)": {
+      "put": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve,save and delete individual documents ",
+        "x-ISC_ServiceMethod": "PutDoc",
+        "operationId": "PutDoc005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "get": {
+        "operationId": "GetDoc005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "GetDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDoc005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "head": {
+        "operationId": "HeadDoc005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "HeadDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/docs": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to retrieve and delete list of documents ",
+        "x-ISC_ServiceMethod": "GetDocs",
+        "operationId": "GetDocs005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteDocs005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-ISC_ServiceMethod": "DeleteDocs",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/compile": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis to compile documents ",
+        "x-ISC_ServiceMethod": "Compile",
+        "operationId": "Compile005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/index": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " index one or more classes ",
+        "x-ISC_ServiceMethod": "Index",
+        "operationId": "Index005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/query": {
+      "post": {
+        "description": " This method returns the results of running the specified query in the specified namespace.  The request body is simply a JSON object which specifies the query:  <pre>  {  \"query\": \"SELECT TOP 1 Name FROM %Dictionary.ClassDefinition\",  \"parameters\" : []  }  </pre>  The URL parameter ?max= can be passed to specify the maximum number of rows to return.   The value must be a positive integer or the default behavior (return all rows) will be used.    HTTP Codes returned:-    HTTP 200 if OK  HTTP 415 if the we are not passed application/json as the content type  HTTP 500 if an error occurs (details will be in status error array)    If the URL parameter ?positional=1 is passed, the return object key will contain an array of objects,  one for each result set, that contains the column metadata and the values for each row in separate arrays:  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": [  {  \"columns\": [  {  \"name\": \"Name\",  \"type\": \"VARCHAR(4096)\"  }  ],  \"content\": [  [  \"%Api.Atelier\"  ]  ]  }  ]  }  </pre>  If the positional URL parameter is not passed or the value is not 1, the return content will be an array of objects.  The objects contain information relating to each row returned by the query:  <pre>  {  \"status\": {  \"errors\": [],  \"summary\": \"\"  },  \"console\": [],  \"result\": {  \"content\": [  {  \"Name\": \"%Api.Atelier\"  }  ]  }  }  </pre> ",
+        "summary": " run a query ",
+        "operationId": "Query005",
+        "x-ISC_ServiceMethod": "Query",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/work": {
+      "post": {
+        "description": " This call queues an item for work. On success it returns 202 and sets the 'Location' header  to indicate where the results can be retrieved from with an HTTP GET.    HTTP Codes returned:-    HTTP 202 if Accepted  HTTP 404 if the request type does not exist  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "summary": " Apis to support long-running requests ",
+        "operationId": "QueueAsync005",
+        "x-ISC_ServiceMethod": "QueueAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/work/{id}": {
+      "get": {
+        "operationId": "PollAsync005",
+        "description": " This call polls a queued item for console output and results. On success it returns 200.   Console output and results are found in the standard locations for Atelier REST APIs.  If there is more output expected the server will set the 'Retry-After' header. The client  should read this header to determine if another call should be made.  When the result of processing is available (or the work is finished) a GET to this API   will return any results in the 'content' field and (crucially) will NOT set the 'Retry-After'  header. This is an indication that processing is finished.    HTTP Codes returned:-    HTTP 200 if Accepted  HTTP 404 if the request ID does not exist  HTTP 423 if the global node is locked  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "PollAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      },
+      "delete": {
+        "operationId": "CancelAsync005",
+        "description": " This call cancels a work request that has been previously queued.    HTTP Codes returned:-    HTTP 200 if Cancelled  HTTP 404 if the request ID does not exist  HTTP 423 if the global node is locked  HTTP 500 if an error occurs (details will be in status error array)   ",
+        "x-ISC_ServiceMethod": "CancelAsync",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/ens/classes/{type}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "type", "in": "path", "required": true, "type": "string" }
+        ],
+        "summary": " Ensemble support ",
+        "x-ISC_ServiceMethod": "GetEnsClassType",
+        "operationId": "GetEnsClassType005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/ens/adapter/{name}": {
+      "get": {
+        "operationId": "GetAdpInputOutputClass005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          { "name": "name", "in": "path", "required": true, "type": "string" }
+        ],
+        "x-ISC_ServiceMethod": "GetAdpInputOutputClass",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/cvt/doc/xml": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Apis for conversion (Will Be Deprecated: Customers should not call from own code) ",
+        "x-ISC_ServiceMethod": "CvtClientDocToXml",
+        "operationId": "CvtClientDocToXml005",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/cvt/xml/doc": {
+      "post": {
+        "operationId": "CvtXmlToClientDoc005",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "x-ISC_ServiceMethod": "CvtXmlToClientDoc",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/%SYS/cspdebugid": {
+      "get": {
+        "summary": " Get a debug id for debugging a csp application ",
+        "x-ISC_ServiceMethod": "GetCSPDebugId",
+        "operationId": "GetCSPDebugId004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/getmacrolist": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get a list of macros for prompt after $$$ ",
+        "x-ISC_ServiceMethod": "GetMacroList",
+        "operationId": "GetMacroList004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/getmacrosignature": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the signature of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroSignature",
+        "operationId": "GetMacroSignature004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/getmacrolocation": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the location of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroLocation",
+        "operationId": "GetMacroLocation004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/getmacrodefinition": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the definition of a macro ",
+        "x-ISC_ServiceMethod": "GetMacroDefinition",
+        "operationId": "GetMacroDefinition004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/getmacroexpansion": {
+      "post": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "payloadBody",
+            "in": "body",
+            "description": "Request body contents",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "summary": " Get the expansion of a macro with arguments ",
+        "x-ISC_ServiceMethod": "GetMacroExpansion",
+        "operationId": "GetMacroExpansion004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/action/search": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Do a server find in files ",
+        "x-ISC_ServiceMethod": "Search",
+        "operationId": "Search004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    },
+    "/v6/{namespace}/saschema/(.*)": {
+      "get": {
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": " Get the specified SA Schema definition ",
+        "x-ISC_ServiceMethod": "GetSASchemaDefinition",
+        "operationId": "GetSASchemaDefinition004",
+        "responses": {
+          "default": { "description": "(Unexpected Error)" },
+          "200": { "description": "(Expected Result)" }
+        }
+      }
+    }
+  },
+  "swagger": "2.0"
+}

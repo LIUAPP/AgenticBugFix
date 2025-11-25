@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+docker-compose.override.yml
+*.log
+
+# Pytest
+.cache/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# Python compiled extensions
+*.so
+
+# Jupyter
+.ipynb_checkpoints
+
+# Local config files
+.env
+.env.*
+
+# Ignore sensitive files if present
+secrets.yml
+credentials.json
+
+# Allow py-app source but ignore virtualenvs and build outputs inside
+py-app/.venv/
+py-app/dist/
+py-app/build/
+
+# Windows specific
+*.lnk
+
+# Keep node_modules out if accidentally added
+node_modules/
