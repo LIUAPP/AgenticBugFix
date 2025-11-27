@@ -1,0 +1,134 @@
+<div class="agent-app">
+  <header class="hero">
+    <div class="hero__headline">
+      <p class="hero__eyebrow">Jira bug fixer</p>
+      <h1>FixMate AI Agent</h1>
+    </div>
+    <p class="hero__tagline">Describe the Jira issue and follow the live stream of fixes.</p>
+  </header>
+
+  <section class="chat-panel">
+    <div class="chat-header">
+      <div class="brand-mark">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-label="Agent icon">
+            <defs>
+              <linearGradient id="agentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7C83FF" />
+                <stop offset="100%" stop-color="#43E6B0" />
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="28" height="28" rx="9" fill="url(#agentGradient)" />
+            <path
+              d="M11 18c2 0 3-1 5-5 2 4 3 5 5 5 1.657 0 3-1.343 3-3s-1.343-3-3-3c-2 0-3 1-5 5-2-4-3-5-5-5-1.657 0-3 1.343-3 3s1.343 3 3 3Z"
+              fill="#fff"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="brand-name">FixMate</p>
+          <p class="brand-subtitle">AI agent for Jira fixes</p>
+        </div>
+      </div>
+      <div class="connection" [ngClass]="connectionState()">
+        <span class="connection__dot"></span>
+        <span>{{ connectionCopy[connectionState()] }}</span>
+      </div>
+    </div>
+
+    <div class="conversation">
+      @let conversation = messages();
+      @if (!conversation.length) {
+        <div class="empty-state">
+          <h2>Ready when you are</h2>
+          <p>Share the Jira ticket ID. The agent streams every step back to you.</p>
+          <ul>
+            <li>Understands Jira context</li>
+            <li>Pulls repo automatically</li>
+            <li>Fixes bugs described in Jira ticket</li>
+            <li>Shows live status for each reasoning phase</li>
+            <li>Auto-scrolls as new tokens arrive</li>
+          </ul>
+        </div>
+      } @else {
+        <div class="thread" #scrollContainer>
+          @for (message of conversation; track message.id) {
+            @if (message.role === 'user' || message.visible) {
+              <article class="message" [ngClass]="message.role">
+                <div class="message__meta">
+                  <div class="role-chip">{{ message.role === 'user' ? 'You' : 'AI Agent' }}</div>
+                  @if (message.role === 'agent') {
+                    <div class="status-pill" [ngClass]="statusClass(message.status)">
+                      <span class="status-pill__dot"></span>
+                      <span>{{ statusLabels[message.status ?? 'thinking'] }}</span>
+                    </div>
+                  }
+                </div>
+                <div class="message__body">
+                  @if (message.content) {
+                    <pre class="message__content" [innerText]="message.content"></pre>
+                  } @else {
+                    <span class="muted">Awaiting response...</span>
+                  }
+                  @if (message.isStreaming) {
+                    <span class="stream-cursor" aria-hidden="true"></span>
+                  }
+                </div>
+              </article>
+            }
+          }
+        </div>
+      }
+    </div>
+
+    <footer class="composer">
+      <label class="sr-only" for="composerInput">Describe the bug you want to fix</label>
+      <div class="composer__input-row">
+        <textarea
+          id="composerInput"
+          class="composer__input"
+          rows="1"
+          placeholder="Fix Jira ..."
+          [formControl]="composerControl"
+          (keydown.enter)="handleComposerEnter($event)"
+        ></textarea>
+        <div class="composer__actions">
+          <button type="button" class="icon-btn ghost" (click)="startNewChat()" title="Start new chat session">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M5 12c2-1 4-3 5-5 1 2 3 4 5 5-2 1-4 3-5 5-1-2-3-4-5-5Zm11-9 1.5 3.5L21 8l-3.5 1.5L16 13l-1.5-3.5L11 8l3.5-1.5L16 3Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="icon-btn ghost"
+            (click)="stopStreaming()"
+            [disabled]="!hasStreamingResponse()"
+            title="Stop the current response"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="icon-btn primary"
+            (click)="submitPrompt()"
+            [disabled]="!composerControl.value.trim()"
+            title="Send to AI agent"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M3.4 20.4 21 12 3.4 3.6l-.4 6.9L15 12 3 12.9l.4 7.5Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="composer__hint">Shift + Enter for newline</div>
+    </footer>
+  </section>
+</div>
