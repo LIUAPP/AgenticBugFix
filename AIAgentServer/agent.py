@@ -1,5 +1,6 @@
 """BugFixer agent orchestration."""
 import asyncio
+from web_agent import web_Search
 import json
 import logging
 import os
@@ -10,15 +11,14 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 import random
 
-LOGGER = logging.getLogger("ai-agent-server")
-
 from typing import Any, Dict, List, Optional, AsyncGenerator
 from openai import OpenAI
 
 from codex_client import CodexCLIError, CodexClient
 from config import AgentConfig
-from git_client import GitClient, GitCommandError
-from jira_client import JiraClient, JiraError
+from git_client import GitClient
+from jira_client import JiraClient
+
 from dotenv import load_dotenv
 
 from prompts import SYSTEM_PROMPT, toolsForBugFix
@@ -58,6 +58,7 @@ TOOLNAME_TO_STEP = {
     "fetch_jira": "JiraIntake",
     "pull_repo": "RepoPull",
     "exec_codex": "CodexCLI",
+    "web_search": "web_Search",
 }
 
 class ConversationState:
@@ -79,7 +80,7 @@ def get_conversation_state(conversation_id: str) -> ConversationState:
 @app.websocket("/ai-agent")
 async def websocket_endpoint(websocket: WebSocket) -> None:
     await websocket.accept()
-    LOGGER.info("Client connected from %s", websocket.client)
+    logger.info("Client connected from %s", websocket.client)
 
     try:
         while True:
@@ -87,7 +88,7 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
             try:
                 command = json.loads(data)
             except json.JSONDecodeError as exc:
-                LOGGER.warning("Dropping invalid payload: %s", exc)
+                logger.warning("Dropping invalid payload: %s", exc)
                 continue
 
             cmd_type = command.get("type")
@@ -98,9 +99,9 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
             elif cmd_type == "new-session":
                 await handle_new_session(command)
             else:
-                LOGGER.warning("Unsupported command: %s", cmd_type)
+                logger.warning("Unsupported command: %s", cmd_type)
     except WebSocketDisconnect:
-        LOGGER.info("Client disconnected")
+        logger.info("Client disconnected")
     finally:
         await cleanup_connection()
 
@@ -110,12 +111,12 @@ async def handle_user_message(websocket: WebSocket, command: dict) -> None:
     prompt = command.get("prompt", "").strip()
 
     if not conversation_id or not prompt:
-        LOGGER.warning("Ignoring incomplete user message: %s", command)
+        logger.warning("Ignoring incomplete user message: %s", command)
         return
 
     state = get_conversation_state(conversation_id)
     if state.active_task and not state.active_task.done():
-        LOGGER.info("Conversation %s already streaming. Waiting for completion.", conversation_id)
+        logger.info("Conversation %s already streaming. Waiting for completion.", conversation_id)
         return
 
     task = asyncio.create_task(
@@ -131,7 +132,7 @@ async def handle_stop_request(websocket: WebSocket, command: dict) -> None:
 
     state = get_conversation_state(conversation_id)
     if state.active_task and not state.active_task.done():
-        LOGGER.info("Stopping response for conversation %s", conversation_id)
+        logger.info("Stopping response for conversation %s", conversation_id)
         state.active_task.cancel()
         try:
             await state.active_task
@@ -155,7 +156,7 @@ async def handle_new_session(command: dict) -> None:
     state = conversations.pop(conversation_id, None)
     if state and state.active_task and not state.active_task.done():
         state.active_task.cancel()
-    LOGGER.info("Started fresh session for %s", conversation_id)
+    logger.info("Started fresh session for %s", conversation_id)
 
 
 async def stream_agent_response(
@@ -179,7 +180,7 @@ async def stream_agent_response(
         )
         raise
     except Exception as exc:  # pylint: disable=broad-exception-caught
-        LOGGER.exception("Agent failed to process prompt")
+        logger.exception("Agent failed to process prompt")
         await send_event(
             websocket,
             conversationId=conversation_id,
@@ -224,7 +225,7 @@ class BugFixerAgent:
         self.exec_codex = self._codex.exec_codex
         self._step = ""
         self._step_Responses: List[str] = []
-        self._step_Done = True
+        self._step_Done = False
 
     async def run(self, prompt: str):
         """Run the triage→reproduce→fix loop until exit or iteration limit."""
@@ -286,10 +287,11 @@ class BugFixerAgent:
                     
                     # Notify client of step start
                     stepStartResponse = "iteration:" + str(iteration + 1) + " Step: " + step_payload.get("step", "") + " Reasoning: "  + step_payload.get("reasoning", "")
+                    logger.info("Agent Step started: %s", stepStartResponse)
                     print("Agent Step started:", stepStartResponse)
                     
                     self._step = step_payload.get("step", "")
-                    if (self._step != "JiraIntake"):
+                    if (self._step == "Summary"):
                         self._response_id = str(uuid.uuid4())
                         await send_event(
                             self._websocket,
@@ -298,10 +300,9 @@ class BugFixerAgent:
                             type="response-start",
                             status="thinking",
                             metadata={"promptPreview": stepStartResponse},
-                        )
-                        if (self._step != "Summary"):
-                            self._step_Responses.append(stepStartResponse + "\n")                       
+                        )                   
                     else:
+                        # JiraIntake rejected responsed and ERROR step responses
                         async for token in self._stream_response(stepStartResponse):
                             self._step_Responses.append(token)
                             await send_event(
@@ -313,6 +314,19 @@ class BugFixerAgent:
                                 token = token,
                             )
                         self._step_Responses.append("\n")
+                        # Notify client step is compeleted.
+                        print("Agent Step completed:", "".join(self._step_Responses))
+                        await send_event(
+                            self._websocket,
+                            conversationId=self._conversation_id,
+                            responseId=self._response_id,
+                            type="response-end",
+                            status="completed",
+                            content=step_payload.get("reasoning", "")
+                        )
+                        self._step_Done = True
+                        break
+                        
             except AgentProtocolError as exc:
                 logger.warning("Bad payload: %s", exc)
                 self._conversation.append(
@@ -358,7 +372,7 @@ class BugFixerAgent:
                 # Check for exit condition
                 if step_payload.get("step") == "Summary":
                     # Stream summary reasoning to client
-                    summary_message = "AI Agent has completed all steps, bug has been fixed. Summary: \n" + step_payload.get("reasoning", "")
+                    summary_message = "AI Agent has completed all steps, bug has been fixed. Summary: \n\n" + step_payload.get("reasoning", "")
                     async for token in self._stream_response(summary_message):
                         self._step_Responses.append(token)
                         await send_event(
@@ -381,8 +395,34 @@ class BugFixerAgent:
                         content="".join(self._step_Responses).strip(),
                     )
                     self._step_Done = True
+                    
+                    # Send celebration event
+                    await send_event(
+                        self._websocket,
+                        conversationId=self._conversation_id,
+                        responseId=self._response_id,
+                        type="response-celebration",
+                        status="celebrating",
+                        metadata={"celebration": "fireworks"},
+                    )
+
+                    # exit the agent loop
                     break
 
+        if (iteration == self._config.max_iterations - 1):
+            # Notify client that max iterations reached without completion
+            warning_message = f"Agent reached maximum iterations ({self._config.max_iterations}) without completing the task."
+            logger.info(warning_message)
+            if (self._step_Done):
+                self._response_id = str(uuid.uuid4())
+            await send_event(
+                self._websocket,
+                conversationId=self._conversation_id,
+                responseId=self._response_id,
+                type="response-end",
+                status="completed",
+                content=warning_message,
+            )
         return
 
     async def _call_model(self) -> str:
@@ -430,12 +470,18 @@ class BugFixerAgent:
         except json.JSONDecodeError:
             args = {"_raw": raw_args}
 
-         # Tool calls present, content is None, notify client about tool calls
-        print(f"Model requested tool calls: tool: {name}, args: {raw_args}")
-        # Notify client of step start
-        stepStartResponse = f"Model requested tool calls: tool: {name}, args: {raw_args}"
-       
+        # Tool calls present, content is None, notify client about tool calls
         self._step = TOOLNAME_TO_STEP.get(name, "")
+        if (self._step == "CodexCLI"):
+            prompt = args.get('prompt','')
+            print(f"Model requested tool calls: tool: {name}, prompt: \n {prompt}")
+            # Notify client of step start
+            stepStartResponse = f"Model requested tool calls: tool: {name}, prompt: \n {prompt}"
+        else:
+            print(f"Model requested tool calls: tool: {name}, args: \n {json.dumps(args, indent=4, ensure_ascii=False)}")
+            # Notify client of step start
+            stepStartResponse = f"Model requested tool calls: tool: {name}, args: \n {json.dumps(args, indent=4, ensure_ascii=False)}"
+        
         if (self._step != "JiraIntake"):
             self._response_id = str(uuid.uuid4())
             await send_event(
@@ -446,7 +492,17 @@ class BugFixerAgent:
                 status="thinking",
                 metadata={"promptPreview": stepStartResponse},
             )
-            self._step_Responses.append(stepStartResponse + "\n")
+            async for token in self._stream_response(stepStartResponse):
+                self._step_Responses.append(token)
+                await send_event(
+                    self._websocket,
+                    conversationId=self._conversation_id,
+                    responseId=self._response_id,
+                    type="response-token",
+                    status="streaming",
+                    token = token,
+                )
+            self._step_Responses.append("\n")
         else:
             async for token in self._stream_response(stepStartResponse):
                 self._step_Responses.append(token)
@@ -459,6 +515,7 @@ class BugFixerAgent:
                     token = token,
                 )
             self._step_Responses.append("\n")
+        
         try:
             handler = getattr(self, f"tool_{name}", None) or getattr(self, name, None)
             if callable(handler):

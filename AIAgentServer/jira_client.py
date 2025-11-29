@@ -57,34 +57,51 @@ class JiraClient:
     async def fetch_jira(self, jiraNo: str) -> Dict[str, Any]:
         try:
             issue= await self.fetch_issue(jiraNo,"summary,description,customfield_10076")
-            Jira_json={
-                    "summary": issue['fields']['summary'],
-                    "description": self.extract_text(issue['fields']['description']),
-                    "reproduce procedures": self.extract_text(issue['fields']['customfield_10076'])
-                }
+            
+            Jira_json=f"""
+{{
+    "summary": {issue["fields"]["summary"]},
+    "description": {self.extract_text(issue["fields"]["description"])},
+    "reproduce procedures": {self.extract_text(issue["fields"]["customfield_10076"])}
+}}"""
 
-            return json.dumps(Jira_json, indent=4)
+            # return json.dumps(Jira_json, indent=2, ensure_ascii=False)
+            return Jira_json
         except JiraError as exc:
             raise JiraError(f"Failed to fetch Jira issue {jiraNo}: {exc}")
 
 if __name__ == "__main__":
 
     import os
-    issue_key = "AI-5"  # Default issue key
+    import asyncio
     from dotenv import load_dotenv
+
     load_dotenv()
+    issue_key = os.environ.get("JIRA_ISSUE", "AI-5")  # Default issue key
     client = JiraClient(JiraConfig.from_env())
-    try:
-        issue = client.fetch_issue(issue_key,"summary,description,customfield_10076")
-        print(json.dumps(
-            {
-                "key": issue['key'],
-                "summary": issue['fields']['summary'],
-                "description": client.extract_text(issue['fields']['description']),
-                "reproduce procedures": client.extract_text(issue['fields']['customfield_10076'])
-            },
-            ensure_ascii=False,
-        ))
-    except JiraError as exc:
-        print(f"Error: {exc}")
-        sys.exit(2)
+
+    async def main():
+        try:
+            issue = await client.fetch_issue(issue_key, "summary,description,customfield_10076")
+            Jira_json=f"""
+{{
+    "summary": {issue["fields"]["summary"]},
+    "description": {client.extract_text(issue["fields"]["description"])},
+    "reproduce procedures": {client.extract_text(issue["fields"]["customfield_10076"])}
+}}"""
+            print(Jira_json)
+            # print(json.dumps(
+            #     {
+            #         "key": issue['key'],
+            #         "summary": issue['fields']['summary'],
+            #         "description": client.extract_text(issue['fields']['description']),
+            #         "reproduce procedures": client.extract_text(issue['fields']['customfield_10076'])
+            #     },
+            #     indent=4,
+            #     ensure_ascii=False,
+            # ))
+        except JiraError as exc:
+            print(f"Error: {exc}")
+            sys.exit(2)
+
+    asyncio.run(main())

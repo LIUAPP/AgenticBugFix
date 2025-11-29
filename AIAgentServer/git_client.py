@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import subprocess
 from pathlib import Path
 from typing import Iterable, List, Optional
@@ -30,6 +31,7 @@ class GitClient:
         text: bool = True,
         input_text: Optional[str] = None,
     ) -> subprocess.CompletedProcess[str]:
+
         command: List[str] = ["git", *args]
         result = subprocess.run(
             command,
@@ -46,8 +48,7 @@ class GitClient:
         return result
 
     async def pull(self,repo: str) -> str:
-        output = self._run(["init"])
-        output = output.stdout.strip()
+        output = self._run(["init"]).stdout.strip()
         self._run(["branch", "-M", "main"])
         tempOutput = (self._run(["remote", "-v"])).stdout.strip()
         if (tempOutput.find("origin") != -1):
@@ -73,4 +74,4 @@ class GitClient:
 if __name__ == "__main__":
     git = GitClient(GitConfig.from_env())
     print(git.repo_root)
-    print(git.pull("https://github.com/LIUAPP/issue1.git"))
+    print(asyncio.run(git.pull("https://github.com/LIUAPP/issue1.git")))
