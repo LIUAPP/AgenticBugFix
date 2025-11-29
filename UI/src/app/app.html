@@ -1,4 +1,17 @@
 <div class="agent-app">
+  @if (fireworksVisible()) {
+    <div class="fireworks-layer" aria-hidden="true">
+      @for (burst of fireworksBursts(); track burst.id) {
+        <span
+          class="firework"
+          [style.left]="burst.left + '%'"
+          [style.top]="burst.top + '%'"
+          [style.animationDelay]="burst.delay + 'ms'"
+          [style.--hue]="burst.hue"
+        ></span>
+      }
+    </div>
+  }
   <header class="hero">
     <div class="hero__headline">
       <p class="hero__eyebrow">Jira bug fixer</p>
@@ -71,7 +84,11 @@
                     <span class="muted">Awaiting response...</span>
                   }
                   @if (message.isStreaming) {
-                    <span class="stream-cursor" aria-hidden="true"></span>
+                    <!-- <span class="stream-cursor" aria-hidden="true"></span> -->
+                    <div class="thinking-indicator" role="status" aria-live="polite">
+                      <span class="thinking-indicator__text">Thinking</span>
+                      <span class="thinking-indicator__flow" aria-hidden="true"></span>
+                    </div>
                   }
                 </div>
               </article>

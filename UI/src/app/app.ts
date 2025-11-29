@@ -1,6 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
+  DestroyRef,
   ElementRef,
   PLATFORM_ID,
   ViewChild,
@@ -32,6 +33,14 @@ interface ConversationMessage {
   visible: boolean;
 }
 
+interface FireworkBurst {
+  id: number;
+  left: number;
+  top: number;
+  delay: number;
+  hue: number;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -43,6 +52,7 @@ export class App {
   @ViewChild('scrollContainer') private scrollContainer?: ElementRef<HTMLDivElement>;
 
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly aiStream = inject(AiStreamService);
 
   protected readonly composerControl = new FormControl('', { nonNullable: true });
@@ -52,6 +62,8 @@ export class App {
   protected readonly hasStreamingResponse = computed(() =>
     this.messages().some((message) => message.role === 'agent' && message.isStreaming)
   );
+  protected readonly fireworksBursts = signal<readonly FireworkBurst[]>([]);
+  protected readonly fireworksVisible = computed(() => this.fireworksBursts().length > 0);
   protected readonly connectionCopy: Record<AgentConnectionStatus, string> = {
     connected: 'Connected',
     connecting: 'Connecting',
@@ -63,11 +75,13 @@ export class App {
     thinking: 'Thinking',
     streaming: 'Streaming',
     completed: 'Completed',
+    celebrating: 'Fixed!',
     error: 'Error',
     stopped: 'Stopped',
   };
 
   private scrollAnimationHandle?: number;
+  private fireworksTimeoutHandle?: ReturnType<typeof setTimeout>;
 
   constructor() {
     this.aiStream.events$
@@ -82,6 +96,11 @@ export class App {
     }
 
     Promise.resolve().then(() => this.aiStream.startNewSession(this.conversationId()));
+
+    this.destroyRef.onDestroy(() => {
+      this.clearFireworksTimer();
+      this.fireworksBursts.set([]);
+    });
   }
 
   protected trackByMessageId(_: number, item: ConversationMessage): string {
@@ -171,6 +190,11 @@ export class App {
       return;
     }
 
+    if (event.type === 'response-celebration') {
+      this.triggerFireworks(event.metadata);
+      return;
+    }
+
     this.messages.update((current) => {
       const updated = [...current];
       const index = this.ensureAgentMessage(updated, event);
@@ -234,6 +258,10 @@ export class App {
       }
 
       updated[index] = nextMessage;
+      if (this.shouldTriggerFireworks(event)) {
+        this.triggerFireworks(event.metadata);
+      }
+
       if (nextMessage.finished) {
         return this.releaseQueuedAgentResponses(updated);
       }
@@ -297,6 +325,97 @@ export class App {
     }
 
     return messages;
+  }
+
+  private shouldTriggerFireworks(event: AgentStreamEvent): boolean {
+    if (event.type !== 'response-end' && event.type !== 'response-status') {
+      return false;
+    }
+
+    if (event.status === 'celebrating') {
+      return true;
+    }
+
+    return this.hasFireworksMetadata(event.metadata);
+  }
+
+  private hasFireworksMetadata(metadata?: Record<string, unknown>): boolean {
+    if (!metadata) {
+      return false;
+    }
+
+    const celebration = (metadata as { celebration?: unknown }).celebration;
+    if (typeof celebration === 'string') {
+      const lowered = celebration.toLowerCase();
+      if (lowered === 'fireworks' || lowered === 'celebrate' || lowered === 'success') {
+        return true;
+      }
+    }
+
+    const status = (metadata as { status?: unknown }).status;
+    if (typeof status === 'string') {
+      const lowered = status.toLowerCase();
+      if (lowered === 'bug-fixed' || lowered === 'fixed' || lowered === 'resolved') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private triggerFireworks(metadata?: Record<string, unknown>): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const count = this.resolveFireworkCount(metadata);
+    const hue = this.resolveFireworkHue(metadata);
+    const bursts = this.buildFireworkBursts(count, hue);
+    this.fireworksBursts.set(bursts);
+    this.clearFireworksTimer();
+    this.fireworksTimeoutHandle = setTimeout(() => {
+      this.fireworksBursts.set([]);
+      this.fireworksTimeoutHandle = undefined;
+    }, 15000);
+  }
+
+  private resolveFireworkCount(metadata?: Record<string, unknown>): number {
+    const requested = metadata && (metadata as { bursts?: unknown }).bursts;
+    if (typeof requested === 'number' && Number.isFinite(requested)) {
+      return Math.max(5, Math.min(15, Math.floor(requested)));
+    }
+
+    return 7;
+  }
+
+  private resolveFireworkHue(metadata?: Record<string, unknown>): number | undefined {
+    const hue = metadata && (metadata as { hue?: unknown }).hue;
+    if (typeof hue === 'number' && Number.isFinite(hue)) {
+      return hue % 360;
+    }
+
+    return undefined;
+  }
+
+  private buildFireworkBursts(count: number, baseHue?: number): readonly FireworkBurst[] {
+    const now = Date.now();
+    return Array.from({ length: count }, (_, index) => ({
+      id: now + index,
+      left: 10 + Math.random() * 80,
+      top: 20 + Math.random() * 55,
+      delay: index * 180,
+      hue:
+        baseHue !== undefined
+          ? Math.floor((baseHue + index * 11) % 360)
+          : Math.floor(180 + Math.random() * 150),
+    }));
+  }
+
+  private clearFireworksTimer(): void {
+    if (this.fireworksTimeoutHandle) {
+      clearTimeout(this.fireworksTimeoutHandle);
+      this.fireworksTimeoutHandle = undefined;
+    }
   }
 
   private queueScrollToBottom(): void {

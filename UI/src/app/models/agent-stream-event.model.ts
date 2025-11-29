@@ -3,6 +3,7 @@ export type AgentResponseStatus =
   | 'thinking'
   | 'streaming'
   | 'completed'
+  | 'celebrating'
   | 'error'
   | 'stopped';
 
@@ -12,7 +13,8 @@ export type AgentStreamEventType =
   | 'response-status'
   | 'response-end'
   | 'response-error'
-  | 'response-stop';
+  | 'response-stop'
+  | 'response-celebration';
 
 export interface AgentStreamEvent {
   conversationId: string;
