@@ -1,6 +1,7 @@
 """BugFixer agent orchestration."""
 import asyncio
-from web_agent import web_Search
+from web_agent import web_search
+from rag_client import query_jira_rag
 import json
 import logging
 import os
@@ -58,7 +59,8 @@ TOOLNAME_TO_STEP = {
     "fetch_jira": "JiraIntake",
     "pull_repo": "RepoPull",
     "exec_codex": "CodexCLI",
-    "web_search": "web_Search",
+    "web_search": "WebSearch",
+    "query_jira_rag": "RAG"
 }
 
 class ConversationState:
@@ -223,6 +225,8 @@ class BugFixerAgent:
         self.fetch_jira = self._jira.fetch_jira
         self.pull_repo = self._git.pull
         self.exec_codex = self._codex.exec_codex
+        self.web_search = web_search
+        self.query_jira_rag = query_jira_rag    
         self._step = ""
         self._step_Responses: List[str] = []
         self._step_Done = False
@@ -531,7 +535,10 @@ class BugFixerAgent:
         except Exception as exc:
             result = "error:" + str(exc)
 
-        content = result
+        if (result is None):
+            content = "No result returned."
+        else:
+            content = result
         if len(content) > MAX_ACTION_PREVIEW:
             content = content[:MAX_ACTION_PREVIEW] + "...[truncated]"
         self._conversation.append(

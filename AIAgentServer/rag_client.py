@@ -1,3 +1,4 @@
+import json
 import os
 import math
 from typing import List, Tuple, Optional, Iterable, Hashable, Dict, Any
@@ -126,10 +127,16 @@ def _parse_jira_issue_from_content(
     if not issue_key:
         issue_key = metadata.get("issue_key") or metadata.get("jira_key")
 
+    # return {
+    #     "issue_key": issue_key,
+    #     "description": description,
+    #     "steps_to_reproduce": steps,
+    #     "root_cause": root_cause,
+    #     "fix_implemented": fix_implemented,
+    # }
     return {
         "issue_key": issue_key,
         "description": description,
-        "steps_to_reproduce": steps,
         "root_cause": root_cause,
         "fix_implemented": fix_implemented,
     }
@@ -157,6 +164,7 @@ def query_jira_rag(
           - 'fix_implemented'
         Or None if no document passes the similarity_threshold.
     """
+    print (f"\nQuerying JIRA RAG with query: '{query_text}'")
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError(
@@ -225,33 +233,34 @@ def query_jira_rag(
     # 5. Take the top-1 best match
     best_doc, best_score = filtered_docs_with_scores[0]
 
-    parsed_fields = _parse_jira_issue_from_content(
+    result = _parse_jira_issue_from_content(
         best_doc.page_content,
         metadata=best_doc.metadata,
     )
 
-    result: Dict[str, Any] = {
-        "score": best_score,
-        **parsed_fields,
-    }
+    # result: Dict[str, Any] = {
+    #     "score": best_score,
+    #     **parsed_fields,
+    # }
     
     if result:
         print("\n\n**********************")
         print("Best matching issue:")
         print("**********************")
-        for k, v in result.items():
-            print(f"{k}: {v}")
+        print (json.dumps(result, indent=4, ensure_ascii=False))
+        # for k, v in result.items():
+        #     print(f"{k}: {v}")
     else:
         print("No relevant JIRA issue found above threshold.")
     
-    return result
-
+    return json.dumps(result, indent=4, ensure_ascii=False)
 
 if __name__ == "__main__":
     # --- Example Usage ---
     print("\n--- Querying the JIRA RAG system for best-matching issue ---")
 
-    sample_query = "What are the steps to reproduce the CLI fatal error issue?"
+    # sample_query = "What are the steps to reproduce the CLI fatal error issue?"
+    sample_query = "Daily summaries mutable default argument bug inflated counts include previous entries python dataclass list default default_factory bug similar issue"
 
     current_dir = Path(__file__).parent
     chroma_persist_dir = current_dir.parent / "db" / "chroma" / "jira"
@@ -268,8 +277,8 @@ if __name__ == "__main__":
         print("\n\n**********************")
         print("Best matching issue:")
         print("**********************")
-        for k, v in best_issue.items():
-            print(f"{k}: {v}")
+        # for k, v in best_issue.items():
+        #     print(f"{k}: {v}")
         print (best_issue)
     else:
         print("No relevant JIRA issue found above threshold.")

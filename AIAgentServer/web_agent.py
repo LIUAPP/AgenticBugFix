@@ -13,7 +13,7 @@ agent = Agent(
     model="gpt-5",
 )
 
-async def web_Search(query: str) -> str:
+async def web_search(query: str) -> str:
     result = await Runner.run(
         starting_agent=agent,
         input=query,
@@ -21,4 +21,4 @@ async def web_Search(query: str) -> str:
     return(result.final_output)
 if __name__ == "__main__":
     import asyncio
-    print (asyncio.run(web_Search("fixes for python mutable default arguments bug")))
+    print (asyncio.run(web_search("fixes for python mutable default arguments bug")))
