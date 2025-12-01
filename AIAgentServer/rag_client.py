@@ -8,7 +8,8 @@ from sentence_transformers import CrossEncoder
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_openai.embeddings import OpenAIEmbeddings
-
+from dotenv import load_dotenv
+load_dotenv()
 
 def rerank_documents(
     query: str,
@@ -137,7 +138,6 @@ def _parse_jira_issue_from_content(
 def query_jira_rag(
     query_text: str,
     persist_dir: str = Path(__file__).parent.parent / "db" / "chroma" / "jira",
-    api_key: Optional[str] = "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",
     k: int = 10,
     similarity_threshold: float = 0.5,
     reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L-12-v2",
@@ -157,7 +157,7 @@ def query_jira_rag(
           - 'fix_implemented'
         Or None if no document passes the similarity_threshold.
     """
-    api_key = api_key or os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError(
             "OpenAI API key not provided. Set api_key argument or OPENAI_API_KEY env var."
@@ -259,7 +259,6 @@ if __name__ == "__main__":
     best_issue = query_jira_rag(
         query_text=sample_query,
         persist_dir=str(chroma_persist_dir),
-        api_key="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",  # or use env var
         k=10,
         similarity_threshold=0.5,
         reranker_model_name="cross-encoder/ms-marco-MiniLM-L-12-v2",
