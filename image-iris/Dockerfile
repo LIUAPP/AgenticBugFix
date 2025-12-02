@@ -8,7 +8,8 @@ COPY --chown=irisowner:irisowner buildsource /dur
 
 # iris setup 
 RUN find . -name '.DS_Store' -type f -delete
-RUN ISC_CPF_MERGE_FILE=/dur/merge/merge.cpf iris start $ISC_PACKAGE_INSTANCENAME &&\
-    #iris merge $ISC_PACKAGE_INSTANCENAME /dur/merge/merge.cpf &&\
+RUN chmod +x /dur/loader.sh && \
+    sed -i 's/\r$//' /dur/loader.sh && \
+    ISC_CPF_MERGE_FILE=/dur/merge/merge.cpf iris start $ISC_PACKAGE_INSTANCENAME && \
     /dur/loader.sh
-    
+

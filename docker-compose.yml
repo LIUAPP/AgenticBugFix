@@ -14,17 +14,37 @@ services:
             --check-caps false
             --log /usr/irissys/mgr/messages.log
         hostname: testbed-iris
-    # python-runner:
-    #     build: ./py-app
-    #     container_name: testbed-python-runner
-    #     ports:
-    #       - 8081:8080
-    #     depends_on:
-    #         - iris
-    #     volumes:
-    #         - ./py-app:/py-app:ro
-    #     environment:
-    #         - PYTHONUNBUFFERED=1
-    #     tty: false
-    #     restart: "no"
+        volumes:
+            - ./image-iris/buildsource:/dur
+    ui:
+        build: ./UI
+        container_name: agentic-ui
+        ports:
+            - 4200:80
+        depends_on:
+            - iris
+    backend:
+        build: ./py-app
+        container_name: agentic-backend
+        ports:
+          - 8000:8000
+        depends_on:
+            - iris
+        volumes:
+            - ./py-app:/app
+        environment:
+            - PYTHONUNBUFFERED=1
+            - IRIS_URL=http://iris:52773
+        tty: false
+        restart: "no"
+
+    codex:
+        build: ./codex-service
+        container_name: agentic-codex
+        ports:
+            - 8001:8000
+        environment:
+            - PYTHONUNBUFFERED=1
+        volumes:
+            - ./py-app:/app/code
 

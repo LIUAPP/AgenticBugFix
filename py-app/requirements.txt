@@ -1,3 +1,12 @@
 requests>=2.28
-# Add any other dependencies your app needs below
-# e.g. pyyaml, flask, fastapi, uvicorn
+fastapi
+uvicorn
+openai
+python-dotenv
+torch
+sentence-transformers
+langchain-core
+langchain-chroma
+langchain-openai
+chromadb
+httpx
