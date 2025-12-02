@@ -34,7 +34,7 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 MAX_ACTION_PREVIEW = 1200
-MAX_PROMPT_CHARS = 1000
+MAX_PROMPT_CHARS = 500
 
 load_dotenv()
 config = AgentConfig.from_env()

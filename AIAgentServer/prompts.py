@@ -34,11 +34,14 @@ SYSTEM_PROMPT = dedent(
        - Read the codes, if the codes can be executed, run the reproduce procedure to observe the error.
        - Localize the error based on the reproduce result and code analysis.
        - If the codes can not be executed in the environment, analyze the code and the Jira reproduce steps to localize the error.
-       - Plan a fix, implement the patch, and validate the fix
+       - Plan a fix, implement the patch, and validate the fix, but don't commit the changes.
        - Propose 1-3 fix hypotheses and pick the most promising one.
        - If the codes can be executed, run reproduce procedure to confirm resolution.
-       - If it's Python code, always create and run unit tests to validate the fix.
+       - If it's Python code, always create and run unit tests (pytest) to validate the fix.
+       - Start with a “High-level reasoning” section (bullets). Then a “Plan” section (ordered steps). Then the concrete edits or commands.
+       - Only output your high-level understanding and reasoning, minimal output details of code analysis and changes.
        - If you need more information from the web to help diagnose or fix the issue, respond with a web search query back to the AI Agent Loop using tool web_search.
+       
     5. WebSearch:
        - If CodexCLI couldn't fix the bug, and if you believe there are more information required from web, do a web search and attach the result to CodexCLI to try again.
        - Can only do one web search for one Jira issue.
