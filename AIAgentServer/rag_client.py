@@ -1,6 +1,5 @@
 import json
 import os
-import math
 from typing import List, Tuple, Optional, Iterable, Hashable, Dict, Any
 from pathlib import Path
 
@@ -10,7 +9,21 @@ from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_openai.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
+
 load_dotenv()
+
+# ==========================
+# Config
+# ==========================
+
+CURRENT_DIR = Path(__file__).parent
+# Must match CHROMA_PERSIST_DIR in create_rag.py
+CHROMA_PERSIST_DIR = CURRENT_DIR.parent / "db" / "chroma" / "jira"
+
+
+# ==========================
+# Reranking helpers
+# ==========================
 
 def rerank_documents(
     query: str,
@@ -83,68 +96,13 @@ def dedupe_reranked_documents(
     return unique_results
 
 
-def _parse_jira_issue_from_content(
-    content: str,
-    metadata: Optional[dict] = None,
-) -> Dict[str, Optional[str]]:
-    """
-    Parse a JIRA issue from the Document.page_content text.
-
-    Expected format (lines starting with these prefixes):
-      Issue Key:
-      Description:
-      Steps to Reproduce:
-      Root Cause:
-      Fix Implemented:
-    """
-    metadata = metadata or {}
-
-    # Initialize defaults
-    issue_key = None
-    description = None
-    steps = None
-    root_cause = None
-    fix_implemented = None
-
-    # Simple line-based parsing
-    for line in content.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-
-        if line.lower().startswith("issue key:"):
-            issue_key = line.split(":", 1)[1].strip()
-        elif line.lower().startswith("description:"):
-            description = line.split(":", 1)[1].strip()
-        elif line.lower().startswith("steps to reproduce:"):
-            steps = line.split(":", 1)[1].strip()
-        elif line.lower().startswith("root cause:"):
-            root_cause = line.split(":", 1)[1].strip()
-        elif line.lower().startswith("fix implemented:"):
-            fix_implemented = line.split(":", 1)[1].strip()
-
-    # Fallback to metadata if issue key is still missing
-    if not issue_key:
-        issue_key = metadata.get("issue_key") or metadata.get("jira_key")
-
-    # return {
-    #     "issue_key": issue_key,
-    #     "description": description,
-    #     "steps_to_reproduce": steps,
-    #     "root_cause": root_cause,
-    #     "fix_implemented": fix_implemented,
-    # }
-    return {
-        "issue_key": issue_key,
-        "description": description,
-        "root_cause": root_cause,
-        "fix_implemented": fix_implemented,
-    }
-
+# ==========================
+# Main query function
+# ==========================
 
 def query_jira_rag(
     query_text: str,
-    persist_dir: str = Path(__file__).parent.parent / "db" / "chroma" / "jira",
+    persist_dir: str = str(CHROMA_PERSIST_DIR),
     k: int = 10,
     similarity_threshold: float = 0.5,
     reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L-12-v2",
@@ -154,29 +112,31 @@ def query_jira_rag(
     filters by similarity threshold, and returns the best matching JIRA issue
     as a dict.
 
-    Returns:
-        A dict with keys:
-          - 'score' (float, 0–1)
-          - 'issue_key'
-          - 'description'
-          - 'steps_to_reproduce'
-          - 'root_cause'
-          - 'fix_implemented'
-        Or None if no document passes the similarity_threshold.
+    IMPORTANT:
+      - Final fields (description, root_cause, fix_implemented, etc.) are taken
+        DIRECTLY from the document metadata, which was injected at embed time
+        in create_rag.py. No CSV is read here.
     """
-    print (f"\nQuerying JIRA RAG with query: '{query_text}'")
+    print(f"\nQuerying JIRA RAG with query: '{query_text}'")
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError(
-            "OpenAI API key not provided. Set api_key argument or OPENAI_API_KEY env var."
+            "OpenAI API key not provided. Set OPENAI_API_KEY env var."
         )
 
     embeddings_model = OpenAIEmbeddings(api_key=api_key, model="text-embedding-3-small")
 
     # Load the Chroma database from the persistent directory
+    persist_dir = str(persist_dir)
+    if not os.path.exists(persist_dir):
+        print(f"Chroma DB directory not found at {persist_dir}. Run create_rag.py first.")
+        return None
+
     try:
         jira_vector_db = Chroma(
-            persist_directory=str(persist_dir), embedding_function=embeddings_model
+            persist_directory=persist_dir,
+            embedding_function=embeddings_model,
         )
     except Exception as e:
         print(f"Error loading Chroma database from {persist_dir}: {e}")
@@ -211,8 +171,7 @@ def query_jira_rag(
     ]
     print(
         f"Filtered down to {len(filtered_docs_with_scores)} documents "
-        f"above threshold {similarity_threshold}."
-        f"for query: '{query_text}'"
+        f"above threshold {similarity_threshold} for query: '{query_text}'"
     )
 
     if filtered_docs_with_scores:
@@ -220,54 +179,44 @@ def query_jira_rag(
             print(f"\n--- Retrieved Document {i} (Score: {score:.4f}) ---")
             content = doc.page_content.replace("\n\n", "\n")
             print(f"{content}")
-
             if doc.metadata:
                 print(f"Metadata: {doc.metadata}")
     else:
         print("No relevant documents found after reranking and filtering.")
-
-
-    if not filtered_docs_with_scores:
         return None
 
     # 5. Take the top-1 best match
     best_doc, best_score = filtered_docs_with_scores[0]
 
-    result = _parse_jira_issue_from_content(
-        best_doc.page_content,
-        metadata=best_doc.metadata,
-    )
+    md = best_doc.metadata or {}
 
-    # result: Dict[str, Any] = {
-    #     "score": best_score,
-    #     **parsed_fields,
-    # }
-    
-    if result:
-        print("\n\n**********************")
-        print("Best matching issue:")
-        print("**********************")
-        print (json.dumps(result, indent=4, ensure_ascii=False))
-        # for k, v in result.items():
-        #     print(f"{k}: {v}")
-    else:
-        print("No relevant JIRA issue found above threshold.")
-    
-    return json.dumps(result, indent=4, ensure_ascii=False)
+    result: Dict[str, Any] = {
+        "score": best_score,
+        "issue_key": md.get("issue_key"),
+        "description": md.get("description"),
+        "steps_to_reproduce": md.get("steps_to_reproduce"),
+        "root_cause": md.get("root_cause"),
+        "fix_implemented": md.get("fix_implemented"),
+    }
+
+    print("\n\n**********************")
+    print("Best matching issue (from metadata):")
+    print("**********************")
+    print(json.dumps(result, indent=4, ensure_ascii=False))
+
+    return result
+
 
 if __name__ == "__main__":
-    # --- Example Usage ---
     print("\n--- Querying the JIRA RAG system for best-matching issue ---")
 
-    # sample_query = "What are the steps to reproduce the CLI fatal error issue?"
-    sample_query = "Daily summaries mutable default argument bug inflated counts include previous entries python dataclass list default default_factory bug similar issue"
-
-    current_dir = Path(__file__).parent
-    chroma_persist_dir = current_dir.parent / "db" / "chroma" / "jira"
+    sample_query = (
+        "How to fix the CLI fatal error?"
+    )
 
     best_issue = query_jira_rag(
         query_text=sample_query,
-        persist_dir=str(chroma_persist_dir),
+        persist_dir=str(CHROMA_PERSIST_DIR),
         k=10,
         similarity_threshold=0.5,
         reranker_model_name="cross-encoder/ms-marco-MiniLM-L-12-v2",
@@ -275,10 +224,8 @@ if __name__ == "__main__":
 
     if best_issue:
         print("\n\n**********************")
-        print("Best matching issue:")
+        print("Best matching issue (final result):")
         print("**********************")
-        # for k, v in best_issue.items():
-        #     print(f"{k}: {v}")
-        print (best_issue)
+        print(json.dumps(best_issue, indent=4, ensure_ascii=False))
     else:
         print("No relevant JIRA issue found above threshold.")
