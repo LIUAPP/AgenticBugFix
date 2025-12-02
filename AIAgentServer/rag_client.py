@@ -191,10 +191,10 @@ def query_jira_rag(
     md = best_doc.metadata or {}
 
     result: Dict[str, Any] = {
-        "score": best_score,
+        #"score": best_score,
         "issue_key": md.get("issue_key"),
         "description": md.get("description"),
-        "steps_to_reproduce": md.get("steps_to_reproduce"),
+        #"steps_to_reproduce": md.get("steps_to_reproduce"),
         "root_cause": md.get("root_cause"),
         "fix_implemented": md.get("fix_implemented"),
     }
@@ -204,14 +204,15 @@ def query_jira_rag(
     print("**********************")
     print(json.dumps(result, indent=4, ensure_ascii=False))
 
-    return result
+    return json.dumps(result, indent=4, ensure_ascii=False)
 
 
 if __name__ == "__main__":
     print("\n--- Querying the JIRA RAG system for best-matching issue ---")
 
     sample_query = (
-        "How to fix the CLI fatal error?"
+        "Daily summaries mutable default argument bug inflated counts "
+        "include previous entries python mutable list default similar issue"
     )
 
     best_issue = query_jira_rag(
@@ -226,6 +227,6 @@ if __name__ == "__main__":
         print("\n\n**********************")
         print("Best matching issue (final result):")
         print("**********************")
-        print(json.dumps(best_issue, indent=4, ensure_ascii=False))
+        print(best_issue)
     else:
         print("No relevant JIRA issue found above threshold.")
