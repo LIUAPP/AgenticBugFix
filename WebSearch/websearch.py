@@ -1,7 +1,7 @@
 import requests
-
-YOUR_GOOGLE_API_KEY = "AIzaSyDbmAkXL0n5OL8aGgSWp6Bgl-eCjlNQlrY"
-YOUR_CUSTOM_SEARCH_ENGINE_ID = "1575da05955d24f76"
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 def simple_web_search_api(query, api_key, cx_id, num_results=5):
     """
@@ -20,10 +20,10 @@ def simple_web_search_api(query, api_key, cx_id, num_results=5):
     search_url = "https://www.googleapis.com/customsearch/v1"
 
     if api_key == "":
-        api_key = YOUR_GOOGLE_API_KEY
+        api_key = os.getenv("YOUR_GOOGLE_API_KEY")
     
     if cx_id == "":
-        cx_id = YOUR_CUSTOM_SEARCH_ENGINE_ID
+        cx_id = os.getenv("YOUR_CUSTOM_SEARCH_ENGINE_ID")
 
     params = {
         "key": api_key,
