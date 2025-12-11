@@ -31,9 +31,10 @@ fh = logging.FileHandler("agent.log")
 fh.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 fh.setFormatter(formatter)
-logger.addHandler(fh)
+if not logger.handlers:
+    logger.addHandler(fh)
 
-MAX_ACTION_PREVIEW = 1200
+MAX_ACTION_PREVIEW = 6000
 MAX_PROMPT_CHARS = 500
 
 load_dotenv()
@@ -430,7 +431,7 @@ class BugFixerAgent:
         return
 
     async def _call_model(self) -> str:
-        logger.info("Calling model with conversation: %s", self._conversation)
+        logger.info("Calling model with conversation: %s", json.dumps(self._conversation,indent=4, ensure_ascii=False))
         response = self._openai.chat.completions.create(
             model=self._config.openai.model,
             messages=self._conversation,
